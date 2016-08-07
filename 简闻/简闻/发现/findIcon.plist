@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>icon</key>
+		<string>find_icon_0</string>
+		<key>text</key>
+		<string>邮编</string>
+	</dict>
+	<dict>
+		<key>icon</key>
+		<string>find_icon_1</string>
+		<key>text</key>
+		<string>成语词典</string>
+	</dict>
+	<dict>
+		<key>icon</key>
+		<string>find_icon_2</string>
+		<key>text</key>
+		<string>身份证识别</string>
+	</dict>
+	<dict>
+		<key>icon</key>
+		<string>find_icon_3</string>
+		<key>text</key>
+		<string>电话号识别</string>
+	</dict>
+	<dict>
+		<key>icon</key>
+		<string>find_icon_4</string>
+		<key>text</key>
+		<string>聊天机器人</string>
+	</dict>
+	<dict>
+		<key>icon</key>
+		<string>find_icon_5</string>
+		<key>text</key>
+		<string>IP地址查询</string>
+	</dict>
+</array>
+</plist>

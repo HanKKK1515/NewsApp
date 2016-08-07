@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="BaV-eb-cgL" customClass="HLPostcodeHeaderSecondView">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="55"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="选填" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6sP-GQ-Rs1" customClass="HLSecondTextField">
+                    <rect key="frame" x="265" y="5" width="325" height="20"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <variation key="widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="277" y="7" width="91" height="30"/>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="277" y="7" width="113" height="30"/>
+                    </variation>
+                </textField>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="关键字：" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jIN-1A-5dd" customClass="HLLabel">
+                    <rect key="frame" x="10" y="29" width="60" height="20"/>
+                    <color key="backgroundColor" red="0.86379419189999995" green="0.52127353109999996" blue="0.085660965300000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" red="0.40000000600000002" green="1" blue="1" alpha="0.68966427360000004" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="10" y="42" width="70" height="30"/>
+                    </variation>
+                </label>
+                <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="选填" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="a0b-Vd-jRn" customClass="HLSecondTextField">
+                    <rect key="frame" x="75" y="29" width="120" height="20"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <textInputTraits key="textInputTraits" returnKeyType="search"/>
+                    <variation key="widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="85" y="42" width="112" height="30"/>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="85" y="42" width="112" height="30"/>
+                    </variation>
+                </textField>
+                <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="＊必填" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R3J-QL-SfP" customClass="HLSecondTextField">
+                    <rect key="frame" x="75" y="5" width="120" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="120" id="ee2-OM-Re3">
+                            <variation key="heightClass=regular-widthClass=regular" constant="300"/>
+                        </constraint>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="85" y="7" width="112" height="30"/>
+                    </variation>
+                </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bOa-v8-WpL" customClass="HLButton">
+                    <rect key="frame" x="200" y="28" width="390" height="22"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <state key="normal" title="查询">
+                        <color key="titleColor" red="0.40000000600000002" green="1" blue="1" alpha="0.68966427360000004" colorSpace="calibratedRGB"/>
+                    </state>
+                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="202" y="42" width="188" height="30"/>
+                    </variation>
+                    <connections>
+                        <action selector="clickSearchBtn" destination="BaV-eb-cgL" eventType="touchUpInside" id="UeS-Kd-kTN"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="省    市：" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IUT-wZ-y5B" customClass="HLLabel">
+                    <rect key="frame" x="10" y="5" width="60" height="20"/>
+                    <color key="backgroundColor" red="0.86379419189999995" green="0.52127353109999996" blue="0.085660965300000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="60" id="DmT-Bg-DbS"/>
+                        <constraint firstAttribute="height" constant="20" id="xII-ej-Zcm">
+                            <variation key="heightClass=regular-widthClass=regular" constant="25"/>
+                        </constraint>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" red="0.40000000600000002" green="1" blue="1" alpha="0.68966427360000004" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="10" y="7" width="70" height="30"/>
+                    </variation>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="区    县：" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CWN-Ik-6z9" customClass="HLLabel">
+                    <rect key="frame" x="200" y="5" width="60" height="20"/>
+                    <color key="backgroundColor" red="0.86379419189999995" green="0.52127353109999996" blue="0.085660965300000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" red="0.40000000600000002" green="1" blue="1" alpha="0.68966427360000004" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="202" y="7" width="70" height="30"/>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="202" y="7" width="70" height="30"/>
+                    </variation>
+                </label>
+                <view alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lF5-kB-HaT">
+                    <rect key="frame" x="0.0" y="54" width="600" height="1"/>
+                    <color key="backgroundColor" red="0.40000000600000002" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="6mH-I9-o4M"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstItem="jIN-1A-5dd" firstAttribute="height" secondItem="IUT-wZ-y5B" secondAttribute="height" id="0dj-UT-bSP"/>
+                <constraint firstItem="6sP-GQ-Rs1" firstAttribute="bottom" secondItem="IUT-wZ-y5B" secondAttribute="bottom" id="17N-1k-Btu"/>
+                <constraint firstItem="6sP-GQ-Rs1" firstAttribute="top" secondItem="IUT-wZ-y5B" secondAttribute="top" id="6xl-ec-zJA"/>
+                <constraint firstItem="jIN-1A-5dd" firstAttribute="leading" secondItem="IUT-wZ-y5B" secondAttribute="leading" id="Che-Sq-H5T"/>
+                <constraint firstAttribute="trailing" secondItem="lF5-kB-HaT" secondAttribute="trailing" id="FI8-3w-Tm1"/>
+                <constraint firstItem="R3J-QL-SfP" firstAttribute="bottom" secondItem="IUT-wZ-y5B" secondAttribute="bottom" id="Izp-jw-0oc"/>
+                <constraint firstItem="6sP-GQ-Rs1" firstAttribute="trailing" secondItem="bOa-v8-WpL" secondAttribute="trailing" id="K6R-PZ-X83"/>
+                <constraint firstItem="jIN-1A-5dd" firstAttribute="trailing" secondItem="IUT-wZ-y5B" secondAttribute="trailing" id="KZj-Ci-UC6"/>
+                <constraint firstItem="R3J-QL-SfP" firstAttribute="leading" secondItem="IUT-wZ-y5B" secondAttribute="trailing" constant="5" id="Lzv-MZ-Je8"/>
+                <constraint firstItem="CWN-Ik-6z9" firstAttribute="bottom" secondItem="IUT-wZ-y5B" secondAttribute="bottom" id="Oml-zK-2Xn"/>
+                <constraint firstItem="bOa-v8-WpL" firstAttribute="bottom" secondItem="jIN-1A-5dd" secondAttribute="bottom" constant="1" id="SiV-CX-E1T"/>
+                <constraint firstItem="bOa-v8-WpL" firstAttribute="top" secondItem="jIN-1A-5dd" secondAttribute="top" constant="-1" id="T5Y-ym-p2M"/>
+                <constraint firstItem="lF5-kB-HaT" firstAttribute="leading" secondItem="BaV-eb-cgL" secondAttribute="leading" id="UIG-Og-UxA"/>
+                <constraint firstAttribute="bottom" secondItem="lF5-kB-HaT" secondAttribute="bottom" id="WiY-ta-Ene"/>
+                <constraint firstItem="CWN-Ik-6z9" firstAttribute="top" secondItem="IUT-wZ-y5B" secondAttribute="top" id="Wno-Rr-AAb"/>
+                <constraint firstItem="lF5-kB-HaT" firstAttribute="top" secondItem="jIN-1A-5dd" secondAttribute="bottom" constant="5" id="cBx-gK-Lu1"/>
+                <constraint firstItem="CWN-Ik-6z9" firstAttribute="leading" secondItem="R3J-QL-SfP" secondAttribute="trailing" constant="5" id="dy9-nV-WM3"/>
+                <constraint firstItem="6sP-GQ-Rs1" firstAttribute="leading" secondItem="CWN-Ik-6z9" secondAttribute="trailing" constant="5" id="hRi-l4-e1f"/>
+                <constraint firstItem="bOa-v8-WpL" firstAttribute="leading" secondItem="CWN-Ik-6z9" secondAttribute="leading" id="jHQ-K6-00o"/>
+                <constraint firstItem="a0b-Vd-jRn" firstAttribute="bottom" secondItem="jIN-1A-5dd" secondAttribute="bottom" id="l5v-WI-uC8"/>
+                <constraint firstItem="a0b-Vd-jRn" firstAttribute="top" secondItem="jIN-1A-5dd" secondAttribute="top" id="nKV-ts-MhZ"/>
+                <constraint firstItem="IUT-wZ-y5B" firstAttribute="top" secondItem="BaV-eb-cgL" secondAttribute="top" constant="5" id="pbS-v3-KXn"/>
+                <constraint firstItem="IUT-wZ-y5B" firstAttribute="leading" secondItem="BaV-eb-cgL" secondAttribute="leading" constant="10" id="rp6-Md-S1I"/>
+                <constraint firstAttribute="trailing" secondItem="6sP-GQ-Rs1" secondAttribute="trailing" constant="10" id="tWR-CB-HUn"/>
+                <constraint firstItem="CWN-Ik-6z9" firstAttribute="width" secondItem="IUT-wZ-y5B" secondAttribute="width" id="uuL-R1-ZqC"/>
+                <constraint firstItem="a0b-Vd-jRn" firstAttribute="leading" secondItem="R3J-QL-SfP" secondAttribute="leading" id="wMn-Ji-zeI"/>
+                <constraint firstItem="a0b-Vd-jRn" firstAttribute="trailing" secondItem="R3J-QL-SfP" secondAttribute="trailing" id="yJr-7y-f7V"/>
+                <constraint firstItem="R3J-QL-SfP" firstAttribute="top" secondItem="IUT-wZ-y5B" secondAttribute="top" id="yhT-8E-Wmf"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="btn" destination="bOa-v8-WpL" id="bdi-aH-TTj"/>
+                <outlet property="district" destination="6sP-GQ-Rs1" id="ojb-Fs-27R"/>
+                <outlet property="keyword" destination="a0b-Vd-jRn" id="KYy-AL-BFj"/>
+                <outlet property="province" destination="R3J-QL-SfP" id="uLn-2J-HqE"/>
+            </connections>
+            <point key="canvasLocation" x="632" y="62.5"/>
+        </view>
+    </objects>
+</document>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="EHf-IW-A2E">
+            <objects>
+                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Llm-lL-Icb"/>
+                        <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch" translatesAutoresizingMaskIntoConstraints="NO" id="Ewp-if-j3g">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchIpad" translatesAutoresizingMaskIntoConstraints="NO" id="Lck-jz-i9l">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchIpadLand" translatesAutoresizingMaskIntoConstraints="NO" id="9A3-2t-Kiq">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Ewp-if-j3g" secondAttribute="trailing" id="06q-KP-Pxl"/>
+                            <constraint firstAttribute="trailing" secondItem="Lck-jz-i9l" secondAttribute="trailing" id="GDA-jx-o9F"/>
+                            <constraint firstItem="9A3-2t-Kiq" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" id="Gyq-Ww-OeS"/>
+                            <constraint firstItem="Ewp-if-j3g" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="MbY-a5-wr5"/>
+                            <constraint firstItem="9A3-2t-Kiq" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="MxS-da-d0I"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="Ewp-if-j3g" secondAttribute="bottom" id="YUe-ga-tzf"/>
+                            <constraint firstItem="Lck-jz-i9l" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" id="aje-Sj-gAi"/>
+                            <constraint firstItem="Lck-jz-i9l" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="b3l-yK-scg"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="Lck-jz-i9l" secondAttribute="bottom" id="evQ-x6-KD9"/>
+                            <constraint firstAttribute="trailing" secondItem="9A3-2t-Kiq" secondAttribute="trailing" id="gnK-gz-E6M"/>
+                            <constraint firstItem="Ewp-if-j3g" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" id="j4O-Be-WiI"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="9A3-2t-Kiq" secondAttribute="bottom" id="jYz-iQ-X8C"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="Ewp-if-j3g"/>
+                                <exclude reference="Lck-jz-i9l"/>
+                                <exclude reference="9A3-2t-Kiq"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="YUe-ga-tzf"/>
+                                <exclude reference="evQ-x6-KD9"/>
+                                <exclude reference="jYz-iQ-X8C"/>
+                                <exclude reference="Gyq-Ww-OeS"/>
+                                <exclude reference="MxS-da-d0I"/>
+                                <exclude reference="gnK-gz-E6M"/>
+                                <exclude reference="06q-KP-Pxl"/>
+                                <exclude reference="MbY-a5-wr5"/>
+                                <exclude reference="j4O-Be-WiI"/>
+                                <exclude reference="GDA-jx-o9F"/>
+                                <exclude reference="aje-Sj-gAi"/>
+                                <exclude reference="b3l-yK-scg"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular">
+                            <mask key="subviews">
+                                <include reference="Lck-jz-i9l"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="evQ-x6-KD9"/>
+                                <include reference="GDA-jx-o9F"/>
+                                <include reference="aje-Sj-gAi"/>
+                                <include reference="b3l-yK-scg"/>
+                            </mask>
+                        </variation>
+                        <variation key="widthClass=regular">
+                            <mask key="subviews">
+                                <include reference="9A3-2t-Kiq"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="jYz-iQ-X8C"/>
+                                <include reference="Gyq-Ww-OeS"/>
+                                <include reference="MxS-da-d0I"/>
+                                <include reference="gnK-gz-E6M"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="Ewp-if-j3g"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="YUe-ga-tzf"/>
+                                <include reference="06q-KP-Pxl"/>
+                                <include reference="MbY-a5-wr5"/>
+                                <include reference="j4O-Be-WiI"/>
+                            </mask>
+                        </variation>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53" y="375"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="launch" width="414" height="736"/>
+        <image name="launchIpad" width="768" height="1024"/>
+        <image name="launchIpadLand" width="1024" height="768"/>
+    </resources>
+</document>

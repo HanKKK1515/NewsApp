@@ -1,0 +1,117 @@
+
+/* Class = "UINavigationItem"; title = "备忘"; ObjectID = "2rG-Mz-9zo"; */
+"2rG-Mz-9zo.title" = "备忘";
+
+/* Class = "UIBarButtonItem"; title = "查询"; ObjectID = "3Py-Pu-s2t"; */
+"3Py-Pu-s2t.title" = "查询";
+
+/* Class = "UILabel"; text = "地   区："; ObjectID = "5Hj-fA-lS1"; */
+"5Hj-fA-lS1.text" = "地   区：";
+
+/* Class = "UIButton"; normalTitle = "IP地址查询"; ObjectID = "66e-75-A7a"; */
+"66e-75-A7a.normalTitle" = "IP地址查询";
+
+/* Class = "UITextField"; placeholder = " ＊请输入标题"; ObjectID = "7zA-i1-XIq"; */
+"7zA-i1-XIq.placeholder" = " ＊请输入标题";
+
+/* Class = "UINavigationItem"; title = "便民"; ObjectID = "GWf-te-zbG"; */
+"GWf-te-zbG.title" = "便民";
+
+/* Class = "UILabel"; text = "详   情："; ObjectID = "HIr-r9-Rie"; */
+"HIr-r9-Rie.text" = "详   情：";
+
+/* Class = "UIBarButtonItem"; title = "清屏"; ObjectID = "INe-9d-34t"; */
+"INe-9d-34t.title" = "清屏";
+
+/* Class = "UIButton"; normalTitle = "成语词典"; ObjectID = "J36-x3-HWu"; */
+"J36-x3-HWu.normalTitle" = "成语词典";
+
+/* Class = "UINavigationItem"; title = "我的"; ObjectID = "JVG-Gh-NVK"; */
+"JVG-Gh-NVK.title" = "我的";
+
+/* Class = "UILabel"; text = "标   记："; ObjectID = "KBp-i0-i38"; */
+"KBp-i0-i38.text" = "标   记：";
+
+/* Class = "UILabel"; text = "姓   别："; ObjectID = "LUO-kv-2x3"; */
+"LUO-kv-2x3.text" = "姓   别：";
+
+/* Class = "UIBarButtonItem"; title = "查询"; ObjectID = "M8O-KP-KMc"; */
+"M8O-KP-KMc.title" = "查询";
+
+/* Class = "UILabel"; text = "地   区："; ObjectID = "MMD-PL-qc0"; */
+"MMD-PL-qc0.text" = "地   区：";
+
+/* Class = "UILabel"; text = "省   份："; ObjectID = "NLV-NF-OvJ"; */
+"NLV-NF-OvJ.text" = "省   份：";
+
+/* Class = "UILabel"; text = "生   日："; ObjectID = "Q7D-gi-Ezs"; */
+"Q7D-gi-Ezs.text" = "生   日：";
+
+/* Class = "UINavigationItem"; title = "添加备忘"; ObjectID = "QBs-Te-U8o"; */
+"QBs-Te-U8o.title" = "添加备忘";
+
+/* Class = "UILabel"; text = "内   容："; ObjectID = "QXW-g1-vln"; */
+"QXW-g1-vln.text" = "内   容：";
+
+/* Class = "UIBarButtonItem"; title = "回退"; ObjectID = "ShT-pe-csC"; */
+"ShT-pe-csC.title" = "回退";
+
+/* Class = "UISegmentedControl"; aVr-1p-cvY.segmentTitles[0] = "邮编查地区"; ObjectID = "aVr-1p-cvY"; */
+"aVr-1p-cvY.segmentTitles[0]" = "邮编查地区";
+
+/* Class = "UISegmentedControl"; aVr-1p-cvY.segmentTitles[1] = "地区查邮编"; ObjectID = "aVr-1p-cvY"; */
+"aVr-1p-cvY.segmentTitles[1]" = "地区查邮编";
+
+/* Class = "UITabBarItem"; title = "我的"; ObjectID = "aZM-Ea-hFZ"; */
+"aZM-Ea-hFZ.title" = "我的";
+
+/* Class = "UINavigationItem"; title = "首页"; ObjectID = "aeg-53-BPR"; */
+"aeg-53-BPR.title" = "首页";
+
+/* Class = "UIBarButtonItem"; title = "查询"; ObjectID = "arY-2t-g92"; */
+"arY-2t-g92.title" = "查询";
+
+/* Class = "UIButton"; normalTitle = "邮编查询"; ObjectID = "cTc-n5-wSP"; */
+"cTc-n5-wSP.normalTitle" = "邮编查询";
+
+/* Class = "UIBarButtonItem"; title = "删除"; ObjectID = "d73-kj-yWV"; */
+"d73-kj-yWV.title" = "删除";
+
+/* Class = "UIBarButtonItem"; title = "保存"; ObjectID = "eqd-IA-QJ5"; */
+"eqd-IA-QJ5.title" = "保存";
+
+/* Class = "UILabel"; text = "运营商："; ObjectID = "f1l-Sa-TsP"; */
+"f1l-Sa-TsP.text" = "运营商：";
+
+/* Class = "UIButton"; normalTitle = "涂鸦记事板"; ObjectID = "i2e-4d-2ay"; */
+"i2e-4d-2ay.normalTitle" = "涂鸦记事板";
+
+/* Class = "UITabBarItem"; title = "发现"; ObjectID = "i39-dz-Hgx"; */
+"i39-dz-Hgx.title" = "发现";
+
+/* Class = "UITabBarItem"; title = "首页"; ObjectID = "iUk-Nm-9zh"; */
+"iUk-Nm-9zh.title" = "首页";
+
+/* Class = "UILabel"; text = "详   情："; ObjectID = "k6y-c0-Bc2"; */
+"k6y-c0-Bc2.text" = "详   情：";
+
+/* Class = "UILabel"; text = "城   市："; ObjectID = "kNt-qp-f9K"; */
+"kNt-qp-f9K.text" = "城   市：";
+
+/* Class = "UISearchBar"; placeholder = "搜索关键字"; ObjectID = "nmp-pd-asp"; */
+"nmp-pd-asp.placeholder" = "搜索关键字";
+
+/* Class = "UIButton"; normalTitle = "电话号码识别"; ObjectID = "sIV-t0-Shs"; */
+"sIV-t0-Shs.normalTitle" = "电话号码识别";
+
+/* Class = "UITabBarItem"; title = "备忘"; ObjectID = "tLY-7P-WbZ"; */
+"tLY-7P-WbZ.title" = "备忘";
+
+/* Class = "UIBarButtonItem"; title = "保存"; ObjectID = "u1m-zS-akK"; */
+"u1m-zS-akK.title" = "保存";
+
+/* Class = "UIButton"; normalTitle = "身份证查询"; ObjectID = "vE9-gE-j7f"; */
+"vE9-gE-j7f.normalTitle" = "身份证查询";
+
+/* Class = "UIButton"; normalTitle = "问答机器人"; ObjectID = "xsf-lc-UOu"; */
+"xsf-lc-UOu.normalTitle" = "问答机器人";

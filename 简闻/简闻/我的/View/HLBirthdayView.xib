@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="mMj-L0-kbw" customClass="HLBirthdayView">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="224"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="7GG-PW-w4G">
+                    <rect key="frame" x="0.0" y="44" width="600" height="180"/>
+                    <date key="date" timeIntervalSinceReferenceDate="488133160.17832601">
+                        <!--2016-06-20 16:32:40 +0000-->
+                    </date>
+                    <locale key="locale" localeIdentifier="zh_CN"/>
+                </datePicker>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="owJ-ej-Lny">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="C2a-NL-8Ty"/>
+                    </constraints>
+                    <items>
+                        <barButtonItem systemItem="cancel" id="0Y0-fL-Lvw">
+                            <connections>
+                                <action selector="cancel:" destination="mMj-L0-kbw" id="jS2-7F-bfR"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="uKj-Yh-2TW"/>
+                        <barButtonItem systemItem="done" id="XKR-qE-2hl">
+                            <connections>
+                                <action selector="done:" destination="mMj-L0-kbw" id="78W-gL-ylK"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                </toolbar>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="owJ-ej-Lny" firstAttribute="top" secondItem="mMj-L0-kbw" secondAttribute="top" id="8hY-tw-kcZ"/>
+                <constraint firstItem="owJ-ej-Lny" firstAttribute="leading" secondItem="mMj-L0-kbw" secondAttribute="leading" id="Ig0-eU-9Fn"/>
+                <constraint firstAttribute="bottom" secondItem="7GG-PW-w4G" secondAttribute="bottom" id="Mp4-Kk-DYO"/>
+                <constraint firstAttribute="trailing" secondItem="7GG-PW-w4G" secondAttribute="trailing" id="NiX-im-hC9"/>
+                <constraint firstItem="7GG-PW-w4G" firstAttribute="top" secondItem="owJ-ej-Lny" secondAttribute="bottom" id="rza-xL-LpX"/>
+                <constraint firstAttribute="trailing" secondItem="owJ-ej-Lny" secondAttribute="trailing" id="sra-lf-Cuu"/>
+                <constraint firstItem="7GG-PW-w4G" firstAttribute="leading" secondItem="mMj-L0-kbw" secondAttribute="leading" id="uQg-Gb-v7d"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="date" destination="7GG-PW-w4G" id="wJY-2v-baS"/>
+                <outlet property="toolBar" destination="owJ-ej-Lny" id="RBz-w4-5gi"/>
+                <outlet property="toolBarHeight" destination="C2a-NL-8Ty" id="whW-lf-Ccf"/>
+            </connections>
+            <point key="canvasLocation" x="419" y="192"/>
+        </view>
+    </objects>
+</document>

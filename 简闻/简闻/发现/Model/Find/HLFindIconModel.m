@@ -1,0 +1,19 @@
+//
+//  HLFindIconModel.m
+//  简闻
+//
+//  Created by 韩露露 on 16/8/5.
+//  Copyright © 2016年 韩露露. All rights reserved.
+//
+
+#import "HLFindIconModel.h"
+
+@implementation HLFindIconModel
+
++ (instancetype)iconWithDict:(NSDictionary *)dict {
+    HLFindIconModel *icon = [[self alloc] init];
+    [icon setValuesForKeysWithDictionary:dict];
+    return icon;
+}
+
+@end
