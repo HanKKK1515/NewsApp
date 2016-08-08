@@ -122,40 +122,38 @@
     parameter[@"word"] = self.titleView.titleSearch.text;
     parameter[@"key"] = @"e7aef2df5803a36dbe2d2e70ee56da9d";
     
-    __weak typeof(self) chengVc = self;
     [HLWebTool get:url param:parameter class:[HLChengyuResponse class] success:^(id responseObject) {
-        chengVc.response = responseObject;
-        if ([chengVc.response.reason isEqualToString:@"success"]) {
-            chengVc.allData = nil;
+        self.response = responseObject;
+        if ([self.response.reason isEqualToString:@"success"]) {
+            self.allData = nil;
             
             HLChengyuTopHeaderView *header = [HLChengyuTopHeaderView topHeaderView];
-            HLChengyuResult *result = chengVc.allData[0];
-            [header chengyu: chengVc.titleView.titleSearch.text pinyin:result.text.firstObject];
-            chengVc.tableView.tableHeaderView = header;
-            chengVc.tableView.tableFooterView = [HLChengyuBottomFooterView bottomFooterView];
-            chengVc.tableView.sectionHeaderHeight = 70;
+            HLChengyuResult *result = self.allData[0];
+            [header chengyu: self.titleView.titleSearch.text pinyin:result.text.firstObject];
+            self.tableView.tableHeaderView = header;
+            self.tableView.tableFooterView = [HLChengyuBottomFooterView bottomFooterView];
+            self.tableView.sectionHeaderHeight = 70;
             
-            [chengVc.tableView reloadData];
+            [self.tableView reloadData];
         } else {
-            [chengVc alertWithMsg:@"请检查输入字词是否正确"];
+            [self alertWithMsg:@"请检查输入字词是否正确"];
         }
     } failure:^(NSError *error) {
-        [MBProgressHUD showError:@"网络连接不稳定！" toView:chengVc.view];
+        [MBProgressHUD showError:@"网络连接不稳定！" toView:self.view];
     }];
 }
 
 - (void)alertWithMsg:(NSString *)msg {
-    __weak typeof(self) chengVc = self;
     if (self.searchBtn.enabled) {
         self.searchBtn.enabled = NO;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            chengVc.searchBtn.enabled = YES;
+            self.searchBtn.enabled = YES;
         });
     }
     [MBProgressHUD showMessage:msg toView:self.view];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:chengVc.view];
-        [chengVc.titleView.titleSearch becomeFirstResponder];
+        [MBProgressHUD hideHUDForView:self.view];
+        [self.titleView.titleSearch becomeFirstResponder];
     });
 }
 

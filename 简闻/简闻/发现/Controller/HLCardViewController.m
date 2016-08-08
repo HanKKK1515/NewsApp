@@ -52,10 +52,9 @@
         errorMsg = @"查询失败";
     }
     [MBProgressHUD showMessage:errorMsg toView:self.view];
-    __weak typeof(self) cardVc = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:cardVc.view];
-        [cardVc.titleView.titleSearch becomeFirstResponder];
+        [MBProgressHUD hideHUDForView:self.view];
+        [self.titleView.titleSearch becomeFirstResponder];
     });
 }
 
@@ -75,22 +74,21 @@
     parameter[@"key"] = @"f283beb06bfc8fe7afbb002f992d81e9";
     parameter[@"dtype"] = @"JSON";
     
-    __weak typeof(self) cardVc = self;
     [HLWebTool get:url param:parameter class:[HLCardResponse class] success:^(id responseObject) {
-        cardVc.area.text = @"  ";
-        cardVc.sex.text = @"  ";
-        cardVc.birthDay.text = @"  ";
+        self.area.text = @"  ";
+        self.sex.text = @"  ";
+        self.birthDay.text = @"  ";
         HLCardResponse *response = responseObject;
         if ([response.reason isEqualToString:@"成功的返回"]) {
             HLCardResult *result = response.result;
-            cardVc.area.text = [cardVc.area.text stringByAppendingString:result.area];
-            cardVc.sex.text = [cardVc.sex.text stringByAppendingString:result.sex];
-            cardVc.birthDay.text = [cardVc.birthDay.text stringByAppendingString:result.birthday];
+            self.area.text = [self.area.text stringByAppendingString:result.area];
+            self.sex.text = [self.sex.text stringByAppendingString:result.sex];
+            self.birthDay.text = [self.birthDay.text stringByAppendingString:result.birthday];
         } else {
-            [cardVc alertWithErrorCode:response.error_code orMsg:nil];
+            [self alertWithErrorCode:response.error_code orMsg:nil];
         }
     } failure:^(NSError *error) {
-        [MBProgressHUD showError:@"网络连接不稳定！" toView:cardVc.view];
+        [MBProgressHUD showError:@"网络连接不稳定！" toView:self.view];
     }];
 }
 

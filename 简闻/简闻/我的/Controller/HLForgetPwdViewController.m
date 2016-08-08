@@ -49,38 +49,37 @@
 }
 
 - (void)resetPwdWithArray:(NSArray *)array {
-    __weak typeof(self) registVc = self;
     if (array.count >0) {
         BmobUser *bUser = array.firstObject;
         if ([[bUser objectForKey:@"emailVerified"] boolValue]) {
-            [BmobUser requestPasswordResetInBackgroundWithEmail:registVc.email.text];
+            [BmobUser requestPasswordResetInBackgroundWithEmail:self.email.text];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"pwdDidReset" object:nil];
             
-            [MBProgressHUD showMessage:@"重置链接已发送至邮箱。" toView:registVc.view];
+            [MBProgressHUD showMessage:@"重置链接已发送至邮箱。" toView:self.view];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:registVc.view];
-                [registVc.navigationController popViewControllerAnimated:YES];
+                [MBProgressHUD hideHUDForView:self.view];
+                [self.navigationController popViewControllerAnimated:YES];
             });
         } else {
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"此邮箱尚未验证，立即验证？" preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *actionYES = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-                [bUser verifyEmailInBackgroundWithEmailAddress:registVc.email.text];
-                [MBProgressHUD showMessage:@"验证链接已发送至邮箱。" toView:registVc.view];
+                [bUser verifyEmailInBackgroundWithEmailAddress:self.email.text];
+                [MBProgressHUD showMessage:@"验证链接已发送至邮箱。" toView:self.view];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideHUDForView:registVc.view];
-                    [registVc.navigationController popViewControllerAnimated:YES];
+                    [MBProgressHUD hideHUDForView:self.view];
+                    [self.navigationController popViewControllerAnimated:YES];
                 });
             }];
             UIAlertAction *actionNO = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
             [alert addAction:actionYES];
             [alert addAction:actionNO];
-            [registVc presentViewController:alert animated:YES completion:nil];
+            [self presentViewController:alert animated:YES completion:nil];
         }
     } else {
-        [MBProgressHUD showMessage:@"此邮箱尚未注册本站用户" toView:registVc.view];
+        [MBProgressHUD showMessage:@"此邮箱尚未注册本站用户" toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:registVc.view];
-            [registVc.email becomeFirstResponder];
+            [MBProgressHUD hideHUDForView:self.view];
+            [self.email becomeFirstResponder];
         });
     }
 }
@@ -91,20 +90,19 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         sender.enabled = YES;
     });
-    __weak typeof(self) registVc = self;
     if ([self stringIsValidEmail:self.email.text]) {
         if (self.emailOption == kHLEmailOptionResetPwd) {
             BmobQuery *bquery = [BmobQuery queryWithClassName:@"_User"];
             [bquery whereKey:@"email" equalTo:self.email.text];
             [bquery findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
                 if (error) {
-                    [MBProgressHUD showMessage:@"发送失败" toView:registVc.view];
+                    [MBProgressHUD showMessage:@"发送失败" toView:self.view];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideHUDForView:registVc.view];
-                        [registVc.email becomeFirstResponder];
+                        [MBProgressHUD hideHUDForView:self.view];
+                        [self.email becomeFirstResponder];
                     });
                 } else {
-                    [registVc resetPwdWithArray:array];
+                    [self resetPwdWithArray:array];
                 }
             }];
         } else if (self.emailOption == kHLEmailOptionVerify || self.emailOption == kHLEmailOptionReset ||self.emailOption == kHLEmailOptionSet) {
@@ -112,19 +110,19 @@
             user.email = self.email.text;
             [user updateInBackgroundWithResultBlock:^(BOOL isSuccessful, NSError *error) {
                 if (isSuccessful) {
-                    [user verifyEmailInBackgroundWithEmailAddress:registVc.email.text];
-                    [[HLAccount sharedAccount] setEmail:registVc.email.text];
+                    [user verifyEmailInBackgroundWithEmailAddress:self.email.text];
+                    [[HLAccount sharedAccount] setEmail:self.email.text];
                     
-                    [MBProgressHUD showMessage:@"验证链接已发送至邮箱。" toView:registVc.view];
+                    [MBProgressHUD showMessage:@"验证链接已发送至邮箱。" toView:self.view];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideHUDForView:registVc.view];
-                        [registVc.navigationController popViewControllerAnimated:YES];
+                        [MBProgressHUD hideHUDForView:self.view];
+                        [self.navigationController popViewControllerAnimated:YES];
                     });
                 } else {
-                    [MBProgressHUD showError:@"添加失败，邮箱可能已被占用!" toView:registVc.view];
+                    [MBProgressHUD showError:@"添加失败，邮箱可能已被占用!" toView:self.view];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideHUDForView:registVc.view];
-                        [registVc.email becomeFirstResponder];
+                        [MBProgressHUD hideHUDForView:self.view];
+                        [self.email becomeFirstResponder];
                     });
                 }
             }];
@@ -132,8 +130,8 @@
     } else {
         [MBProgressHUD showMessage:@"邮箱格式不正确！" toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:registVc.view];
-            [registVc.email becomeFirstResponder];
+            [MBProgressHUD hideHUDForView:self.view];
+            [self.email becomeFirstResponder];
         });
     }
 }
@@ -141,6 +139,10 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self clickBtn:self.btn];
     return YES;
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
 }
 
 @end

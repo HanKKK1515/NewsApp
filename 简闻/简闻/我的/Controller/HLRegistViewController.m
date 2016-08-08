@@ -96,13 +96,12 @@
     if ([self.pwd.text isEqualToString:self.again.text]) {
         return YES;
     } else {
-        __weak typeof(self) registVc = self;
         [MBProgressHUD showMessage:@"确认密码不一致，请核对后再操作。" toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [registVc.view endEditing:YES];
+            [self.view endEditing:YES];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:registVc.view];
-                [registVc.again becomeFirstResponder];
+                [MBProgressHUD hideHUDForView:self.view];
+                [self.again becomeFirstResponder];
             });
         });
         return NO;
@@ -112,13 +111,12 @@
 - (BOOL)verifyUserNameLegal {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF BEGINSWITH ' ' || SELF ENDSWITH ' '"];
     if ([predicate evaluateWithObject:self.userName.text]) {
-        __weak typeof(self) registVc = self;
         [MBProgressHUD showMessage:@"用户名不能以空格开头或结尾！" toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [registVc.view endEditing:YES];
+            [self.view endEditing:YES];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:registVc.view];
-                [registVc.userName becomeFirstResponder];
+                [MBProgressHUD hideHUDForView:self.view];
+                [self.userName becomeFirstResponder];
             });
         });
         return NO;
@@ -127,15 +125,13 @@
 }
 
 - (BOOL)verifyPwdLegal {
-    __weak typeof(self) registVc = self;
-    __weak typeof(UITextField *) textF = self.again;
     if (self.pwd.text.length < 6) {
         [self.view endEditing:YES];
         [MBProgressHUD showMessage:@"密码至少设置6位" toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:registVc.view];
-            [registVc.pwd becomeFirstResponder];
-            textF.text = @"";
+            [MBProgressHUD hideHUDForView:self.view];
+            [self.pwd becomeFirstResponder];
+            self.again.text = @"";
         });
         return NO;
     } else {
@@ -144,9 +140,9 @@
             [self.view endEditing:YES];
             [MBProgressHUD showMessage:@"密码不能包含空格" toView:self.view];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:registVc.view];
-                [registVc.pwd becomeFirstResponder];
-                textF.text = @"";
+                [MBProgressHUD hideHUDForView:self.view];
+                [self.pwd becomeFirstResponder];
+                self.again.text = @"";
             });
             return NO;
         }
@@ -155,9 +151,8 @@
 }
 
 - (void)verifyPwdLenght {
-    __weak typeof(self) registVc = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        registVc.registBtn.enabled = registVc.gender.enabled = registVc.birthday.enabled = registVc.mail.enabled = (registVc.pwd.text.length >= 6) && (registVc.pwd.text.length == registVc.again.text.length);
+        self.registBtn.enabled = self.gender.enabled = self.birthday.enabled = self.mail.enabled = (self.pwd.text.length >= 6) && (self.pwd.text.length == self.again.text.length);
     });
 }
 
@@ -167,12 +162,11 @@
     NSString *stricterFilterString = @"[A-Z0-9a-z\\._%+-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}";
     NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", stricterFilterString];
     if (![emailTest evaluateWithObject:self.mail.text]) {
-        __weak typeof(self) registVc = self;
         [self.view endEditing:YES];
         [MBProgressHUD showMessage:@"邮箱格式不正确！" toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:registVc.view];
-            [registVc.mail becomeFirstResponder];
+            [MBProgressHUD hideHUDForView:self.view];
+            [self.mail becomeFirstResponder];
         });
         return NO;
     }
@@ -210,19 +204,17 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    __weak typeof(self) registVc = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        registVc.again.enabled = registVc.pwd.enabled = registVc.userName.text.length > 0;
-        registVc.mail.enabled = registVc.gender.enabled = registVc.birthday.enabled = registVc.registBtn.enabled = registVc.userName.text.length > 0 && (registVc.pwd.text.length >= 6 && [registVc.pwd.text isEqualToString:registVc.again.text]);
+        self.again.enabled = self.pwd.enabled = self.userName.text.length > 0;
+        self.mail.enabled = self.gender.enabled = self.birthday.enabled = self.registBtn.enabled = self.userName.text.length > 0 && (self.pwd.text.length >= 6 && [self.pwd.text isEqualToString:self.again.text]);
     });
     return YES;
 }
 
 - (void)textFiedChange {
-    __weak typeof(self) registVc = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        registVc.again.enabled = registVc.pwd.enabled = registVc.userName.text.length > 0;
-        registVc.mail.enabled = registVc.gender.enabled = registVc.birthday.enabled = registVc.registBtn.enabled = registVc.userName.text.length > 0 && (registVc.pwd.text.length >= 6 && [registVc.pwd.text isEqualToString:registVc.again.text]);
+        self.again.enabled = self.pwd.enabled = self.userName.text.length > 0;
+        self.mail.enabled = self.gender.enabled = self.birthday.enabled = self.registBtn.enabled = self.userName.text.length > 0 && (self.pwd.text.length >= 6 && [self.pwd.text isEqualToString:self.again.text]);
     });
 }
 
@@ -241,12 +233,11 @@
     account.autoLogin = YES;
     account.notes = [NSArray array];
     
-    __weak typeof(self) registVc = self;
     [self.view endEditing:YES];
     [MBProgressHUD showMessage:@"注册完成，请登录邮箱验证。" toView:self.view];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:registVc.view];
-        [registVc.navigationController popToRootViewControllerAnimated:YES];
+        [MBProgressHUD hideHUDForView:self.view];
+        [self.navigationController popToRootViewControllerAnimated:YES];
     });
 }
 
@@ -255,9 +246,8 @@
     
     self.registBtn.enabled = NO;
     
-    __weak typeof(self) registVc = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        registVc.registBtn.enabled = YES;
+        self.registBtn.enabled = YES;
     });
     BmobUser *bUser = [[BmobUser alloc] init];
     bUser.username = self.userName.text;
@@ -272,23 +262,33 @@
     [bUser setObject:[NSNumber numberWithUnsignedLong:kHLPlatformTypeNone] forKey:@"platformType"];
     [bUser signUpInBackgroundWithBlock:^(BOOL isSuccessful, NSError *error) {
         if (isSuccessful){
-            [BmobUser loginInbackgroundWithAccount:registVc.userName.text andPassword:registVc.pwd.text.md5String block:^(BmobUser *user, NSError *error) {
+            [BmobUser loginInbackgroundWithAccount:self.userName.text andPassword:self.pwd.text.md5String block:^(BmobUser *user, NSError *error) {
                 if (user) {
-                    [registVc.view endEditing:YES];
-                    [registVc setupAccount];
+                    [self.view endEditing:YES];
+                    [self setupAccount];
                 } else {
-                    [registVc.view endEditing:YES];
-                    [MBProgressHUD showError:@"用户名或密码错误" toView:registVc.view];
+                    [self.view endEditing:YES];
+                    [MBProgressHUD showError:@"用户名或密码错误" toView:self.view];
                 }
             }];
         } else {
-            [registVc.view endEditing:YES];
-            [MBProgressHUD showMessage:@"注册失败" toView:registVc.view];
+            [self.view endEditing:YES];
+            [MBProgressHUD showMessage:@"注册失败" toView:self.view];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:registVc.view];
+                [MBProgressHUD hideHUDForView:self.view];
             });
         }
     }];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self regist];
+    [self.view endEditing:YES];
+    return YES;
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
 }
 
 @end

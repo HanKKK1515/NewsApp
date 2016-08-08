@@ -68,9 +68,8 @@
         
         self.addressVc.popoverPresentationController.sourceView = self.headerSecondView.province;
         self.addressVc.popoverPresentationController.sourceRect = self.headerSecondView.province.bounds;
-        __weak typeof(self) postcodeVc = self;
         [self presentViewController:self.addressVc animated:YES completion:^{
-            [postcodeVc.headerSecondView hiddenKeyboard];
+            [self.headerSecondView hiddenKeyboard];
         }];
         return NO;
     } else if (textField.tag == 2) {
@@ -80,9 +79,8 @@
             self.addressVc.popoverPresentationController.sourceView = self.headerSecondView.district;
             self.addressVc.popoverPresentationController.sourceRect = self.headerSecondView.district.bounds;
             
-            __weak typeof(self) postcodeVc = self;
             [self presentViewController:self.addressVc animated:YES completion:^{
-                [postcodeVc.headerSecondView hiddenKeyboard];
+                [self.headerSecondView hiddenKeyboard];
             }];
         } else {
             [self alertWithErrorCode:0 orMsg:@"请先选择省市"];
@@ -113,25 +111,24 @@
  *  addressVC的代理方法
  */
 - (void)postcodeAddressController:(HLPostcodeAddressController *)vc withChoiceObjects:(NSDictionary *)objects {
-    __weak typeof(self) postcodeVc = self;
     [objects enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         if ([obj isMemberOfClass:[HLPostcodeProvinceList class]]) {
-            postcodeVc.currentProvince = obj;
+            self.currentProvince = obj;
         }  else if ([obj isMemberOfClass:[HLPostcodeCityList class]]) {
-            postcodeVc.currentCity = obj;
-            postcodeVc.headerSecondView.district.enabled = postcodeVc.currentCity != nil;
-            postcodeVc.headerSecondView.keyword.enabled = postcodeVc.currentCity != nil;
+            self.currentCity = obj;
+            self.headerSecondView.district.enabled = self.currentCity != nil;
+            self.headerSecondView.keyword.enabled = self.currentCity != nil;
             
             NSString *city = nil;
-            if ([postcodeVc.currentProvince.province isEqualToString:postcodeVc.currentCity.city]) {
-                city = postcodeVc.currentProvince.province;
+            if ([self.currentProvince.province isEqualToString:self.currentCity.city]) {
+                city = self.currentProvince.province;
             } else {
-                city = [NSString stringWithFormat:@"%@%@", postcodeVc.currentProvince.province, postcodeVc.currentCity.city];
+                city = [NSString stringWithFormat:@"%@%@", self.currentProvince.province, self.currentCity.city];
             }
-            postcodeVc.headerSecondView.province.text = city;
+            self.headerSecondView.province.text = city;
         } else if ([obj isMemberOfClass:[HLPostcodeDistrict class]]) {
-            postcodeVc.currentDistrict = obj;
-            postcodeVc.headerSecondView.district.text = postcodeVc.currentDistrict.district;
+            self.currentDistrict = obj;
+            self.headerSecondView.district.text = self.currentDistrict.district;
         }
     }];
     [self.addressVc dismissViewControllerAnimated:NO completion:nil];
@@ -143,9 +140,8 @@
 - (void)postcodeHeaderSecondViewDidClickbtn:(HLPostcodeHeaderSecondView *)view {
     [self.headerSecondView hiddenKeyboard];
     view.btnEnable = NO;
-    __weak typeof(self) poVc = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        poVc.headerSecondView.btnEnable = YES;
+        self.headerSecondView.btnEnable = YES;
     });
     if (self.headerSecondView.province.text.length < 1) {
         [self alertWithErrorCode:0 orMsg:@"请选择省市"];
@@ -172,14 +168,13 @@
 - (void)postcodeHeaderView:(HLPostcodeHeaderView *)postcodeHeaderView{
     [self.headerView hiddenKeyboard];
     self.headerView.btnEnable = NO;
-    __weak typeof(self) poVc = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        poVc.headerView.btnEnable = YES;
+        self.headerView.btnEnable = YES;
     });
     if (self.headerView.searchText.text.length < 1) {
         [self alertWithErrorCode:0 orMsg:@"你还没有输入"];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [poVc.headerView showKeyboard];
+            [self.headerView showKeyboard];
         });
         return;
     }
@@ -201,26 +196,25 @@
 }
 
 - (void)searchDataWithURL:(NSString *)url parameter:(NSMutableDictionary *)attribute removeOldData:(BOOL)remove {
-    __weak typeof(self) poVc = self;
     [HLWebTool get:url param:attribute class:[HLPostcodeAddressResponse class] success:^(id responseObject) {
         HLPostcodeAddressResponse *response = responseObject;
         if ([response.reason isEqualToString:@"successed"]) {
-            poVc.currentResult = response.result;
+            self.currentResult = response.result;
             if (remove) {
-                poVc.currentAllList = nil;
+                self.currentAllList = nil;
             }
-            if (poVc.currentResult.totalcount.integerValue) {
-                poVc.currentAllList = [poVc.currentAllList arrayByAddingObjectsFromArray:poVc.currentResult.list];
+            if (self.currentResult.totalcount.integerValue) {
+                self.currentAllList = [self.currentAllList arrayByAddingObjectsFromArray:self.currentResult.list];
             } else {
-                [MBProgressHUD showError:@"未查询到数据" toView:poVc.view];
+                [MBProgressHUD showError:@"未查询到数据" toView:self.view];
             }
         } else {
-            [poVc alertWithErrorCode:response.error_code orMsg:nil];
+            [self alertWithErrorCode:response.error_code orMsg:nil];
         }
-        [poVc.tableView reloadData];
+        [self.tableView reloadData];
     } failure:^(NSError *error) {
-        [MBProgressHUD showError:@"网络连接不稳定！" toView:poVc.view];
-        [poVc.tableView reloadData];
+        [MBProgressHUD showError:@"网络连接不稳定！" toView:self.view];
+        [self.tableView reloadData];
     }];
 }
 
@@ -235,12 +229,11 @@
     } else if (errorCode == 206604) {
         errorMsg = @"错误的地区";
     }
-    __weak typeof(self) poVc = self;
     [MBProgressHUD showMessage:errorMsg toView:self.view];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:poVc.view];
-        if (poVc.segment.selectedSegmentIndex) {
-            [poVc.headerView showKeyboard];
+        [MBProgressHUD hideHUDForView:self.view];
+        if (self.segment.selectedSegmentIndex) {
+            [self.headerView showKeyboard];
         }
     });
 }
@@ -299,10 +292,9 @@
         [self.footerView startActive];
         scrollView.contentOffset = CGPointMake(0, scrollView.contentSize.height - self.view.frame.size.height);
         scrollView.scrollEnabled = NO;
-        __weak typeof(self) postcodeVc = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             scrollView.scrollEnabled = YES;
-            [postcodeVc loadMoreData];
+            [self loadMoreData];
         });
     }
 }
@@ -388,15 +380,14 @@
     NSString *url = @"http://v.juhe.cn/postcode/pcd";
     NSMutableDictionary *parameter = [NSMutableDictionary dictionary];
     parameter[@"key"] = @"eb320dda57d458cc1a237acda8168c76";
-    __weak typeof(self) poVc = self;
     [HLWebTool get:url param:parameter class:[HLPostcodeCityListResponse class] success:^(id responseObject) {
         HLPostcodeCityListResponse *response = responseObject;
         if ([response.reason isEqualToString:@"successed"]) {
-            poVc.allCityData = response;
-            poVc.addressVc.allData = poVc.allCityData;
+            self.allCityData = response;
+            self.addressVc.allData = self.allCityData;
         }
     } failure:^(NSError *error) {
-        [MBProgressHUD showError:@"网络连接错误！" toView:poVc.view];
+        [MBProgressHUD showError:@"网络连接错误！" toView:self.view];
     }];
 }
 

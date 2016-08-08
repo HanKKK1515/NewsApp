@@ -53,11 +53,10 @@
         UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
         [self.currentView clean];
     } else {
-        __weak typeof(self) drawVc = self;
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"还没开始画哦(^o^)" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *actionY = [UIAlertAction actionWithTitle:@"继续画" style:UIAlertActionStyleDefault handler:nil];
         UIAlertAction *actionN = [UIAlertAction actionWithTitle:@"不画了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            [drawVc.navigationController popViewControllerAnimated:YES];
+            [self.navigationController popViewControllerAnimated:YES];
         }];
         [alert addAction:actionN];
         [alert addAction:actionY];

@@ -63,20 +63,19 @@
 - (void)keyboardDidShow:(NSNotification *)notification {
     NSDictionary *dict = notification.userInfo;
     CGFloat duration = [dict[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    __weak typeof(self) memoVc = self;
     [UIView animateWithDuration:duration animations:^{
         CGRect frame = [dict[UIKeyboardFrameEndUserInfoKey] CGRectValue];
         CGFloat keyboardHeight = frame.size.height;
         
-        if (memoVc.textAdd.isFirstResponder && !memoVc.isChanging) {
-            memoVc.textViewBottomcons.constant = keyboardHeight - HLTextAddInsetBottom;
-            memoVc.textAdd.scrollsToTop = NO;
-            memoVc.textAdd.contentInset = UIEdgeInsetsMake(0, 0, HLTextAddInsetBottom, 0);
-            memoVc.changing = YES;
-        } else if (memoVc.titleAdd.isFirstResponder && memoVc.isChanging) {
-            memoVc.textViewBottomcons.constant = memoVc.margin;
-            memoVc.textAdd.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-            memoVc.changing = NO;
+        if (self.textAdd.isFirstResponder && !self.isChanging) {
+            self.textViewBottomcons.constant = keyboardHeight - HLTextAddInsetBottom;
+            self.textAdd.scrollsToTop = NO;
+            self.textAdd.contentInset = UIEdgeInsetsMake(0, 0, HLTextAddInsetBottom, 0);
+            self.changing = YES;
+        } else if (self.titleAdd.isFirstResponder && self.isChanging) {
+            self.textViewBottomcons.constant = self.margin;
+            self.textAdd.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+            self.changing = NO;
         }
     }];
 }
@@ -86,11 +85,10 @@
     NSDictionary *dict = notification.userInfo;
     CGFloat duration = [dict[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
-    __weak typeof(self) memoVc = self;
     [UIView animateWithDuration:duration animations:^{
-        memoVc.textViewBottomcons.constant = memoVc.margin;
-        memoVc.textAdd.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-        memoVc.changing = NO;
+        self.textViewBottomcons.constant = self.margin;
+        self.textAdd.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        self.changing = NO;
     }];
 }
 
@@ -103,14 +101,13 @@
 - (IBAction)delete:(UIBarButtonItem *)sender {
     [self.textAdd resignFirstResponder];
     [self.titleAdd resignFirstResponder];
-    __weak typeof(self) memoVc = self;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"确定要删除吗？" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:@"再想想" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        [memoVc.titleAdd becomeFirstResponder];
+        [self.titleAdd becomeFirstResponder];
     }];
     UIAlertAction *actionDelete = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [HLTool deleteWithObject:memoVc.memo];
-        [memoVc.navigationController popViewControllerAnimated:YES];
+        [HLTool deleteWithObject:self.memo];
+        [self.navigationController popViewControllerAnimated:YES];
     }];
     [alert addAction:actionCancel];
     [alert addAction:actionDelete];
@@ -138,13 +135,12 @@
         }
         [self.navigationController popViewControllerAnimated:YES];
     } else {
-        __weak typeof(self) memoVc = self;
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"标题输入不正确！" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *actionAbandon = [UIAlertAction actionWithTitle:@"放弃" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            [memoVc.navigationController popViewControllerAnimated:YES];
+            [self.navigationController popViewControllerAnimated:YES];
         }];
         UIAlertAction *actionContinue = [UIAlertAction actionWithTitle:@"继续" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [memoVc.titleAdd becomeFirstResponder];
+            [self.titleAdd becomeFirstResponder];
         }];
         [alert addAction:actionAbandon];
         [alert addAction:actionContinue];
@@ -169,10 +165,9 @@
     if ([HLAccount sharedAccount].isLogin) {
         return YES;
     } else {
-        __weak typeof(self) meVc = self;
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"请先登录账号！" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *actionYES = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            [meVc performSegueWithIdentifier:@"noteSegue" sender:nil];
+            [self performSegueWithIdentifier:@"noteSegue" sender:nil];
         }];
         UIAlertAction *actionNO = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
         [alert addAction:actionYES];
@@ -187,9 +182,8 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    __weak typeof(self) addVc = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [addVc.textAdd becomeFirstResponder];
+        [self.textAdd becomeFirstResponder];
     });
     
     return YES;

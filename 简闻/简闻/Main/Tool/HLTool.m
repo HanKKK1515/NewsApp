@@ -57,7 +57,6 @@
     
     account.login = account.isAutoLogin && account.isLogin;
     if (account.login) {
-        __weak typeof(self) tool = self;
         [BmobUser loginInbackgroundWithAccount:account.nickname andPassword:account.pwd block:^(BmobUser *user, NSError *error) {
             if (user) {
                 account.nickname = user.username;
@@ -78,7 +77,7 @@
                         memo.title = [note objectForKey:@"title"];
                         memo.text = [note objectForKey:@"text"];
                         memo.date = [note objectForKey:@"date"];
-                        [tool insertNews:memo inArray:memos];
+                        [self insertNews:memo inArray:memos];
                     }];
                     account.notes = memos;
                 }];
@@ -130,7 +129,6 @@
         memo.title = [self newTitle:memo.title withArray:array];
         [array insertObject:memo atIndex:0];
         account.notes = array;
-        __weak typeof(self) tool = self;
         BmobUser *bUser = [BmobUser getCurrentUser];
         BmobObject *note = [BmobObject objectWithClassName:@"notes"];
         [note setObject:memo.title forKey:@"title"];
@@ -143,7 +141,7 @@
                 [bUser addRelation:relation forKey:@"myNotes"];
                 [bUser updateInBackgroundWithResultBlock:^(BOOL isSuccessful, NSError *error) {
                     if (isSuccessful) {
-                        [tool saveAccount:account];
+                        [self saveAccount:account];
                     } else {
                         [note deleteInBackground];
                     }
@@ -168,7 +166,6 @@
 
 + (void)modifyNoteWithNewObj:(HLMemo *)newObj oldDate:(NSDate *)oldDate account:(HLAccount *)account {
     
-    __weak typeof(self) tool = self;
     BmobQuery *bquery = [BmobQuery queryWithClassName:@"notes"];
     [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser getCurrentUser]];
     [bquery findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
@@ -190,7 +187,7 @@
                         [bUser addRelation:relation forKey:@"myNotes"];
                         [bUser updateInBackgroundWithResultBlock:^(BOOL isSuccessful, NSError *error) {
                             if (isSuccessful) {
-                                [tool removeNote:noteO user:bUser account:account];
+                                [self removeNote:noteO user:bUser account:account];
                             } else {
                                 [noteN deleteInBackground];
                             }
@@ -219,7 +216,6 @@
 
 + (void)modifyWithObject:(id)object {
     if ([object isMemberOfClass:[HLMemo class]]) {
-        __weak typeof(self) tool = self;
         HLMemo *newObj = object;
         NSDate *oldDate = newObj.date;
         HLAccount *account = [HLAccount sharedAccount];
@@ -228,7 +224,7 @@
             if ([obj.date isEqualToDate:newObj.date]) {
                 newObj.date = [NSDate date];
                 if (![obj.title isEqualToString:newObj.title]) {
-                    newObj.title = [tool newTitle:newObj.title withArray:listMemo];
+                    newObj.title = [self newTitle:newObj.title withArray:listMemo];
                 }
 
                 [listMemo removeObject:obj];
@@ -277,7 +273,6 @@
         }];
         account.notes = listMemo;
         
-        __weak typeof(self) tool = self;
         BmobQuery *bquery = [BmobQuery queryWithClassName:@"notes"];
         [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser getCurrentUser]];
         [bquery findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
@@ -287,7 +282,7 @@
                 fmt.dateFormat = @"yyyy-MM-dd hh:mm:ss";
                 NSDate *date = [noteO objectForKey:@"date"];
                 if ([[fmt stringFromDate:date] isEqualToString:[fmt stringFromDate:oldDate]]) {
-                    [tool removeNote:noteO user:[BmobUser getCurrentUser] account:account];
+                    [self removeNote:noteO user:[BmobUser getCurrentUser] account:account];
                     *stop = YES;
                 }
             }];

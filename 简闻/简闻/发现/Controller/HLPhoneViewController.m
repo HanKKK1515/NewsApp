@@ -66,22 +66,21 @@
     NSMutableDictionary *parameter = [NSMutableDictionary dictionary];
     parameter[@"key"] = @"21668cb31086ed9591b9b5dac1136113";
     parameter[@"tel"] = self.titleView.titleSearch.text;
-    __weak typeof(self) cardVc = self;
     [HLWebTool get:url param:parameter class:[HLPhoneResponse class] success:^(id responseObject) {
         HLPhoneResponse *response = responseObject;
         if ([response.reason isEqualToString:@"查询成功"]) {
             HLPhoneResult *result = response.result;
-            cardVc.province.text = result.province.length ? result.province : @"无";
-            cardVc.city.text = result.city.length ? result.city : @"无";
-            cardVc.sp.text = result.sp.length ? result.sp : @"无";
-            cardVc.rpt_type.text = result.rpt_type.length ? result.rpt_type : @"无";
-            cardVc.countDesc.text = result.countDesc.length ? result.countDesc : @"无";
-            cardVc.detail.text = result.hyname.length ? result.hyname : @"无";
+            self.province.text = result.province.length ? result.province : @"无";
+            self.city.text = result.city.length ? result.city : @"无";
+            self.sp.text = result.sp.length ? result.sp : @"无";
+            self.rpt_type.text = result.rpt_type.length ? result.rpt_type : @"无";
+            self.countDesc.text = result.countDesc.length ? result.countDesc : @"无";
+            self.detail.text = result.hyname.length ? result.hyname : @"无";
         } else {
-            [cardVc alertWithErrorCode:response.error_code orMsg:nil];
+            [self alertWithErrorCode:response.error_code orMsg:nil];
         }
     } failure:^(NSError *error) {
-        [MBProgressHUD showError:@"网络连接不稳定！" toView:cardVc.view];
+        [MBProgressHUD showError:@"网络连接不稳定！" toView:self.view];
     }];
 }
 
@@ -94,11 +93,10 @@
     } else if (errorCode == 207203) {
         errorMsg = @"网络错误，请重试";
     }
-    __weak typeof(self) cardVc = self;
     [MBProgressHUD showMessage:errorMsg toView:self.view];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:cardVc.view];
-        [cardVc.titleView.titleSearch becomeFirstResponder];
+        [MBProgressHUD hideHUDForView:self.view];
+        [self.titleView.titleSearch becomeFirstResponder];
     });
 }
 

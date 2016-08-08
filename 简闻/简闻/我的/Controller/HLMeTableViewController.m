@@ -75,7 +75,6 @@
 - (void)refreshEmailCell {
     if (self.account.isLogin) {
         __weak NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:1];
-        __weak typeof(self) meVc = self;
         __weak UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
         
         [BmobUser loginInbackgroundWithAccount:self.account.nickname andPassword:self.account.pwd block:^(BmobUser *user, NSError *error) {
@@ -83,18 +82,18 @@
                 NSString *email = @"";
                 if (user.email.length > 0) {
                     if ([[user objectForKey:@"emailVerified"] boolValue]) {
-                        meVc.account.emailStatus = kHLEmailStatusTypeVerified;
-                        email = meVc.account.email;
+                        self.account.emailStatus = kHLEmailStatusTypeVerified;
+                        email = self.account.email;
                     } else {
-                        meVc.account.emailStatus = kHLEmailStatusTypeNoVerify;
-                        email = [NSString stringWithFormat:@"%@(未验证)", meVc.account.email];
+                        self.account.emailStatus = kHLEmailStatusTypeNoVerify;
+                        email = [NSString stringWithFormat:@"%@(未验证)", self.account.email];
                     }
                 } else {
-                    meVc.account.emailStatus = kHLEmailStatusTypeNoBinding;
+                    self.account.emailStatus = kHLEmailStatusTypeNoBinding;
                     email = @"绑定邮箱";
                 }
                 cell.detailTextLabel.text = email;
-                [meVc.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
+                [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
             }
         }];
         
@@ -106,18 +105,18 @@
 //            if (isSuccessful) {
 //                if (user.email.length > 0) {
 //                    if ([[user objectForKey:@"emailVerified"] boolValue]) {
-//                        meVc.account.emailStatus = kHLEmailStatusTypeVerified;
-//                        email = meVc.account.email;
+//                        self.account.emailStatus = kHLEmailStatusTypeVerified;
+//                        email = self.account.email;
 //                    } else {
-//                        meVc.account.emailStatus = kHLEmailStatusTypeNoVerify;
-//                        email = [NSString stringWithFormat:@"%@(未验证)", meVc.account.email];
+//                        self.account.emailStatus = kHLEmailStatusTypeNoVerify;
+//                        email = [NSString stringWithFormat:@"%@(未验证)", self.account.email];
 //                    }
 //                } else {
-//                    meVc.account.emailStatus = kHLEmailStatusTypeNoBinding;
+//                    self.account.emailStatus = kHLEmailStatusTypeNoBinding;
 //                    email = @"绑定邮箱";
 //                }
 //                cell.detailTextLabel.text = email;
-//                [meVc.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
+//                [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
 //            }
 //        }];
     }
@@ -139,7 +138,6 @@
     self.account.icon = [user objectForKey:@"icon"];
     self.account.platformType = [[user objectForKey:@"platformType"] unsignedLongValue];
     
-    __weak typeof(self) meVc = self;
     BmobQuery *bquery = [BmobQuery queryWithClassName:@"notes"];
     [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser getCurrentUser]];
     [bquery findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
@@ -150,9 +148,9 @@
             memo.title = [note objectForKey:@"title"];
             memo.text = [note objectForKey:@"text"];
             memo.date = [note objectForKey:@"date"];
-            [meVc insertNews:memo inArray:memos];
+            [self insertNews:memo inArray:memos];
         }];
-        meVc.account.notes = memos;
+        self.account.notes = memos;
     }];
     
     [self.tableView reloadData];
@@ -184,21 +182,20 @@
  *  第三方登录到自己的账户
  */
 - (void)thirdpartyLoginWithBmobUser:(BmobUser *)bUser SSDKUser:(SSDKUser *)ssdkUser {
-    __weak typeof(self) meVc = self;
     [BmobUser loginInbackgroundWithAccount:bUser.username andPassword:ssdkUser.uid.md5String block:^(BmobUser *user, NSError *error) {
         if (user) {
-            [meVc setupAccount:user];
+            [self setupAccount:user];
             [user setObject:ssdkUser.icon forKey:@"icon"];
             [user updateInBackgroundWithResultBlock:^(BOOL isSuccessful, NSError *error) {
                 if (isSuccessful) {
-                    [meVc setupAccount:user];
+                    [self setupAccount:user];
                 } else {
-                    [MBProgressHUD showError:@"头像更新失败" toView:meVc.view];
+                    [MBProgressHUD showError:@"头像更新失败" toView:self.view];
                 }
             }];
         } else {
-            meVc.account.login = NO;
-            [MBProgressHUD showError:[NSString stringWithFormat:@"登录失败：%@", error.localizedDescription] toView:meVc.view];
+            self.account.login = NO;
+            [MBProgressHUD showError:[NSString stringWithFormat:@"登录失败：%@", error.localizedDescription] toView:self.view];
         }
     }];
 }
@@ -207,7 +204,6 @@
  *  用第三方信息注册用户
  */
 - (void)thirdpartyRegistAndLoginWithSSDKUser:(SSDKUser *)ssdkUser {
-    __weak typeof(self) meVc = self;
     
     BmobUser *bUser = [[BmobUser alloc] init];
     bUser.username = ssdkUser.nickname;
@@ -227,16 +223,16 @@
         if (isSuccessful){
             [BmobUser loginInbackgroundWithAccount:ssdkUser.nickname andPassword:ssdkUser.uid.md5String block:^(BmobUser *user, NSError *error) {
                 if (user) {
-                    [meVc setupAccount:user];
+                    [self setupAccount:user];
                 } else {
-                    [MBProgressHUD showError:[NSString stringWithFormat:@"登录失败：%@", error.localizedDescription] toView:meVc.view];
+                    [MBProgressHUD showError:[NSString stringWithFormat:@"登录失败：%@", error.localizedDescription] toView:self.view];
                 }
             }];
         } else {
-            [MBProgressHUD showMessage:@"注册失败" toView:meVc.view];
+            [MBProgressHUD showMessage:@"注册失败" toView:self.view];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:meVc.view];
+                [MBProgressHUD hideHUDForView:self.view];
             });
         }
     }];
@@ -246,38 +242,36 @@
  *  第三方登录获取用户，失败后再注册
  */
 - (void)getAccountWithUser:(SSDKUser *)user {
-    __weak typeof(self) meVc = self;
     BmobQuery *query = [BmobUser query];
     [query whereKey:@"uid" equalTo: user.uid.md5String];
     [query findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
         if (array.count > 0) {
             for (BmobUser *bUser in array) {
                 if ([[bUser objectForKey:@"platformType"] unsignedLongValue] == user.platformType) {
-                    [meVc thirdpartyLoginWithBmobUser:bUser SSDKUser:user];
+                    [self thirdpartyLoginWithBmobUser:bUser SSDKUser:user];
                     return;
                 }
             }
         }
         
-        [meVc thirdpartyRegistAndLoginWithSSDKUser:user];
+        [self thirdpartyRegistAndLoginWithSSDKUser:user];
     }];
 }
 
 - (IBAction)login:(HLButton *)sender {
     if (self.account.isLogin) {
-        __weak typeof(self) meVc = self;
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"确定要退出帐号吗？" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *actionYES = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            NSUInteger type = meVc.account.platformType;
+            NSUInteger type = self.account.platformType;
             if (type == kHLPlatformTypeSinaWeibo || type == kHLPlatformSubTypeQZone || type == kHLPlatformTypeQQ) {
                 [BmobUser logout];
-                [ShareSDK cancelAuthorize:(NSUInteger)meVc.account.platformType];
+                [ShareSDK cancelAuthorize:(NSUInteger)self.account.platformType];
             } else {
                 [BmobUser logout];
             }
-            meVc.account.notes = [NSArray array];
-            meVc.account.login = NO;
-            [meVc.tableView reloadData];
+            self.account.notes = [NSArray array];
+            self.account.login = NO;
+            [self.tableView reloadData];
         }];
         UIAlertAction *actionNO = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
         [alert addAction:actionYES];
@@ -289,7 +283,6 @@
 }
 
 - (IBAction)tencent {
-    __weak typeof(self) meVc = self;
     if (self.account.isLogin) {
         NSString *msg = nil;
         if (self.account.platformType == 6 || self.account.platformType == 998) {
@@ -299,7 +292,7 @@
         }
         [MBProgressHUD showMessage:msg toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:meVc.view];
+            [MBProgressHUD hideHUDForView:self.view];
         });
         return;
     }
@@ -308,13 +301,12 @@
            onStateChanged:^(SSDKResponseState state, SSDKUser *user, NSError *error)
      {
          if (state == SSDKResponseStateSuccess) {
-             [meVc getAccountWithUser:user];
+             [self getAccountWithUser:user];
          }
      }];
 }
 
 - (IBAction)sina {
-    __weak typeof(self) meVc = self;
     if (self.account.isLogin) {
         NSString *msg = nil;
         if (self.account.platformType == 1) {
@@ -324,7 +316,7 @@
         }
         [MBProgressHUD showMessage:msg toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:meVc.view];
+            [MBProgressHUD hideHUDForView:self.view];
         });
         return;
     }
@@ -333,7 +325,7 @@
            onStateChanged:^(SSDKResponseState state, SSDKUser *user, NSError *error)
      {
          if (state == SSDKResponseStateSuccess) {
-             [meVc getAccountWithUser:user];
+             [self getAccountWithUser:user];
          }
      }];
 }
@@ -446,21 +438,20 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 3 && indexPath.row == 0) {
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        __weak typeof(self) meVc = self;
         if ([cell.detailTextLabel.text isEqualToString:@"无缓存"]) {
             [MBProgressHUD showMessage:@"无需清理！" toView:self.view];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:meVc.view];
+                [MBProgressHUD hideHUDForView:self.view];
             });
         } else {
             [HLTool clearCache];
             [MBProgressHUD showMessage:@"正在删除缓存，请稍候....." toView:self.view];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:meVc.view];
-                [meVc.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationNone];
-                [MBProgressHUD showMessage:@"已删除缓存！" toView:meVc.view];
+                [MBProgressHUD hideHUDForView:self.view];
+                [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationNone];
+                [MBProgressHUD showMessage:@"已删除缓存！" toView:self.view];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideHUDForView:meVc.view];
+                    [MBProgressHUD hideHUDForView:self.view];
                 });
             });
         }
@@ -468,11 +459,10 @@
     if (!self.account.isLogin) return;
     
     if (indexPath.section == 1) {
-        __weak typeof(self) meVc = self;
         if (indexPath.row == 0) {
             [MBProgressHUD showMessage:@"暂不支持修改头像！" toView:self.view];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:meVc.view];
+                [MBProgressHUD hideHUDForView:self.view];
             });
         } else if (indexPath.row == 1) {
             [self modifyUserInfoWithRow:1];
@@ -493,7 +483,6 @@
 }
 
 - (void)updateUserInfoText:(NSString *)text row:(int)row {
-    __weak typeof(self) meVc = self;
     BmobUser *user = [BmobUser getCurrentUser];
     if (row == 1) {
         user.username = text;
@@ -505,33 +494,32 @@
     [user updateInBackgroundWithResultBlock:^(BOOL isSuccessful, NSError *error) {
         if (isSuccessful) {
             if (row == 1) {
-                meVc.account.nickname = text;
+                self.account.nickname = text;
             } else if (row == 3) {
-                meVc.account.gender = text;
+                self.account.gender = text;
             } else if (row == 4) {
-                meVc.account.birthday = text;
+                self.account.birthday = text;
             }
-            [meVc.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
         } else {
-            [MBProgressHUD showError:@"修改失败" toView:meVc.view];
+            [MBProgressHUD showError:@"修改失败" toView:self.view];
         }
     }];
 }
 
 - (void)modifyUserInfoWithRow:(NSInteger)row {
-    __weak typeof(self) meVc = self;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"请输入：" message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         if (row == 1) {
             textField.placeholder = @"请输入新的用户名";
             textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         } else if (row == 3) {
-            meVc.genderView = textField;
+            self.genderView = textField;
             HLGenderView *inputView = [HLGenderView genderView];
             [inputView hiddenToolBar:YES];
             textField.inputView = inputView;
         } else if (row == 4) {
-            meVc.birthdayView = textField;
+            self.birthdayView = textField;
             HLBirthdayView *inputView = [HLBirthdayView birthdayView];
             [inputView hiddenToolBar:YES];
             textField.inputView = inputView;
@@ -539,12 +527,12 @@
     }];
     UIAlertAction *actionY = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UITextField *textF = alert.textFields.firstObject;
-        if (row == 1 && [meVc verifyUserNameLegal:textF.text]) {
-            [meVc updateUserInfoText:textF.text row:1];
+        if (row == 1 && [self verifyUserNameLegal:textF.text]) {
+            [self updateUserInfoText:textF.text row:1];
         } else if (row == 3) {
-            [meVc updateUserInfoText:textF.text row:3];
+            [self updateUserInfoText:textF.text row:3];
         } else if (row == 4) {
-            [meVc updateUserInfoText:textF.text row:4];
+            [self updateUserInfoText:textF.text row:4];
         }
     }];
     UIAlertAction *actionN = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
@@ -556,14 +544,13 @@
 - (BOOL)verifyUserNameLegal:(NSString *)name {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF BEGINSWITH ' ' || SELF ENDSWITH ' '"];
     if ([predicate evaluateWithObject:name] || name.length <= 0 || name.length > 20) {
-        __weak typeof(self) registVc = self;
         NSString *msg = @"用户名不能以空格开头或结尾！";
         if (name.length > 20) {
             msg = @"限制20个字符以内！";
         }
         [MBProgressHUD showMessage:msg toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:registVc.view];
+            [MBProgressHUD hideHUDForView:self.view];
         });
         return NO;
     }
@@ -571,15 +558,14 @@
 }
 
 - (void)clickEmailCell:(NSString *)msg {
-    __weak typeof(self) meVc = self;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:msg preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *actionYES = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [meVc performSegueWithIdentifier:@"meSegue" sender:nil];
+        [self performSegueWithIdentifier:@"meSegue" sender:nil];
     }];
     UIAlertAction *actionNO = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
     [alert addAction:actionYES];
     [alert addAction:actionNO];
-    [meVc presentViewController:alert animated:YES completion:nil];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -599,6 +585,10 @@
         }
     }
 }
+
+//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+//    [self.view endEditing:YES];
+//}
 
 - (HLAccount *)account {
     if (!_account) {

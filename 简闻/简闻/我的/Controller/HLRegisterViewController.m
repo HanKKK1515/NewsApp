@@ -98,10 +98,9 @@
         [self.loginSwitch setOn:NO animated:YES];
     } else if (self.pwdSwitch.isOn) {
         self.pwdSwitch.on = NO;
-        __weak typeof(self) regVc = self;
         [MBProgressHUD showMessage:@"请先输入密码！" toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:regVc.view];
+            [MBProgressHUD hideHUDForView:self.view];
         });
     }
 }
@@ -114,10 +113,9 @@
         [self.pwdSwitch setOn:YES animated:YES];
     } else if (self.loginSwitch.isOn) {
         self.loginSwitch.on = NO;
-        __weak typeof(self) regVc = self;
         [MBProgressHUD showMessage:@"请先输入用户名和密码！" toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:regVc.view];
+            [MBProgressHUD hideHUDForView:self.view];
         });
     }
 }
@@ -145,7 +143,6 @@
     self.account.icon = [user objectForKey:@"icon"];
     self.account.platformType = [[user objectForKey:@"platformType"] unsignedLongValue];
     
-    __weak typeof(self) meVc = self;
     BmobQuery *bquery = [BmobQuery queryWithClassName:@"notes"];
     [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser getCurrentUser]];
     [bquery findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
@@ -156,14 +153,13 @@
             memo.title = [note objectForKey:@"title"];
             memo.text = [note objectForKey:@"text"];
             memo.date = [note objectForKey:@"date"];
-            [meVc insertNews:memo inArray:memos];
+            [self insertNews:memo inArray:memos];
         }];
-        meVc.account.notes = memos;
+        self.account.notes = memos;
     }];
     
-    __weak typeof(self) lgVc = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [lgVc.navigationController popViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
     });
 }
 
@@ -191,21 +187,24 @@
     [self.accountField resignFirstResponder];
     [self.pwdField resignFirstResponder];
     self.loginBtn.enabled = NO;
-    __weak typeof(self) lgVc = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        lgVc.loginBtn.enabled = YES;
+        self.loginBtn.enabled = YES;
     });
     [BmobUser loginInbackgroundWithAccount:self.accountField.text andPassword:self.pwdField.text.md5String block:^(BmobUser *user, NSError *error) {
         if (user) {
-            [lgVc setupAccountWithUser:user];
+            [self setupAccountWithUser:user];
         } else {
-            lgVc.account.login = NO;
+            self.account.login = NO;
             [MBProgressHUD showError:@"用户名或密码错误" toView:self.view];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [lgVc.pwdField becomeFirstResponder];
+                [self.pwdField becomeFirstResponder];
             });
         }
     }];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
 }
 
 - (HLAccount *)account {

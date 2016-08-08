@@ -84,11 +84,10 @@ static  NSString * const itemId = @"findItem";
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
         UICollectionReusableView *header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"findHeader" forIndexPath:indexPath];
         return header;
-    } else if ([kind isEqualToString:UICollectionElementKindSectionFooter]) {
+    } else {
         UICollectionReusableView *footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"findFooter" forIndexPath:indexPath];
         return footer;
     }
-    return nil;
 }
 
 - (NSArray *)icons {

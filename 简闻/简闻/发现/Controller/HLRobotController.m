@@ -114,15 +114,14 @@
     if (self.isShow) {
         [self more:nil];
     }
-    __weak typeof(self) robotVc = self;
     NSDictionary *dict = notif.userInfo;
     CGFloat height = [dict[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
     self.toolBarBottomCon.constant = height;
     CGFloat time = [dict[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     [UIView animateWithDuration:time animations:^{
-        [robotVc.view layoutIfNeeded];
+        [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
-        [robotVc scrollViewToBottom];
+        [self scrollViewToBottom];
     }];
 }
 
@@ -130,12 +129,11 @@
     if (self.isShow) {
         [self more:nil];
     }
-    __weak typeof(self) robotVc = self;
     self.toolBarBottomCon.constant = 0;
     NSDictionary *dict = notif.userInfo;
     CGFloat time = [dict[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     [UIView animateWithDuration:time animations:^{
-        [robotVc.view layoutIfNeeded];
+        [self.view layoutIfNeeded];
     }];
 }
 
@@ -166,7 +164,6 @@
     parameter[@"info"] = text;
     parameter[@"key"] = @"73dfd78917809e82552a5849b6a410c2";
     
-    __weak typeof(self) robotVc = self;
     [HLWebTool get:url param:parameter class:[HLRobotResponse class] success:^(id responseObject) {
         HLRobotResponse *response = responseObject;
         if ([response.reason isEqualToString:@"成功的返回"]) {
@@ -175,13 +172,13 @@
             robotData.date = [NSDate date];
             robotData.type = HLRobotTypeRobot;
             [HLTool creatWithObject:robotData];
-            [robotVc.tableView reloadData];
-            [robotVc scrollViewToBottom];
+            [self.tableView reloadData];
+            [self scrollViewToBottom];
         } else {
-            [robotVc alertWithErrorCode:response.error_code orMsg:nil];
+            [self alertWithErrorCode:response.error_code orMsg:nil];
         }
     } failure:^(NSError *error) {
-        [MBProgressHUD showError:@"网络连接错误！" toView:robotVc.view];
+        [MBProgressHUD showError:@"网络连接错误！" toView:self.view];
     }];
 }
 
@@ -207,11 +204,10 @@
         errorMsg = @"未知错误";
     }
     [self.toolBar toolBarResignFirstResponder];
-    __weak typeof(self) robotVc = self;
     [MBProgressHUD showMessage:errorMsg toView:self.view];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:robotVc.view];
-        [robotVc.toolBar toolBarBecomeFirstResponder];
+        [MBProgressHUD hideHUDForView:self.view];
+        [self.toolBar toolBarBecomeFirstResponder];
     });
 }
 
@@ -289,12 +285,11 @@
 }
 
 - (void)clearContent {
-    __weak typeof(self) robotVc = self;
     if (self.chatData.count) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"注意" message:@"确定要删除所有聊天内容吗？" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *actionYES = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             [HLTool clearAllDataWithFileName:@"robot.rrr"];
-            [robotVc.tableView reloadData];
+            [self.tableView reloadData];
         }];
         UIAlertAction *actionNO = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
         [alert addAction:actionYES];
@@ -303,7 +298,7 @@
     } else {
         [MBProgressHUD showMessage:@"无聊天内容" toView:self.view];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:robotVc.view];
+            [MBProgressHUD hideHUDForView:self.view];
         });
     }
 }

@@ -11,9 +11,7 @@
 @implementation HLChengyuResponse
 
 - (NSDictionary *)result {
-    NSMutableDictionary *newResult = [NSMutableDictionary dictionary];
-    __weak typeof(self) chengRsp = self;
-    [_result enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+    NSMutableDictionary *newResult = [NSMutableDictionary dictionary];    [_result enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         NSString *oldKey = key;
         if ([oldKey isEqualToString:@"pinyin"]) {
             if (![obj isEqual:[NSNull null]]) {
@@ -99,11 +97,11 @@
             }
         } else if ([oldKey isEqualToString:@"tongyi"]) {
             if (![obj isEqual:[NSNull null]]) {
-                [newResult setObject:[chengRsp textWithArray:obj] forKey:@"8同义词"];
+                [newResult setObject:[self textWithArray:obj] forKey:@"8同义词"];
             }
         } else if ([oldKey isEqualToString:@"fanyi"]) {
             if (![obj isEqual:[NSNull null]]) {
-                [newResult setObject:[chengRsp textWithArray:obj] forKey:@"9反义词"];
+                [newResult setObject:[self textWithArray:obj] forKey:@"9反义词"];
             }
         }
     }];

@@ -60,10 +60,9 @@
     if (self.account.isLogin) {
         return YES;
     } else {
-        __weak typeof(self) meVc = self;
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"请先登录账号！" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *actionYES = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            [meVc performSegueWithIdentifier:@"noteSegue" sender:nil];
+            [self performSegueWithIdentifier:@"noteSegue" sender:nil];
         }];
         UIAlertAction *actionNO = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
         [alert addAction:actionYES];
@@ -168,9 +167,8 @@
         self.editBtn.title = self.tableView.isEditing ? @"完成" : nil;
     } else {
         [MBProgressHUD showMessage:@"您还没有添加备忘呢!" toView:self.view];
-        __weak typeof(self) memoVc = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:memoVc.view];
+            [MBProgressHUD hideHUDForView:self.view];
         });
     }
 }

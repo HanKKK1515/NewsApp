@@ -57,20 +57,19 @@
     NSMutableDictionary *parameter = [NSMutableDictionary dictionary];
     parameter[@"ip"] = self.titleView.titleSearch.text;
     parameter[@"key"] = @"324ab2a706fa8fdb364234a2e2f88bdf";
-    __weak typeof(self) ipVc = self;
     [HLWebTool get:url param:parameter class:[HLIPResponse class] success:^(id responseObject) {
-        ipVc.area.text = @"  ";
-        ipVc.location.text = @"  ";
+        self.area.text = @"  ";
+        self.location.text = @"  ";
         HLIPResponse *response = responseObject;
         if ([response.reason isEqualToString:@"Return Successd!"]) {
             HLIPResult *result = response.result;
-            ipVc.area.text = [ipVc.area.text stringByAppendingString:result.area ? result.area : @"无"];
-            ipVc.location.text = [ipVc.location.text stringByAppendingString:result.location ? result.location : @"无"];
+            self.area.text = [self.area.text stringByAppendingString:result.area ? result.area : @"无"];
+            self.location.text = [self.location.text stringByAppendingString:result.location ? result.location : @"无"];
         } else {
-            [ipVc alertWithErrorCode:response.error_code orMsg:nil];
+            [self alertWithErrorCode:response.error_code orMsg:nil];
         }
     } failure:^(NSError *error) {
-        [MBProgressHUD showError:@"网络连接错误！" toView:ipVc.view];
+        [MBProgressHUD showError:@"网络连接错误！" toView:self.view];
     }];
 }
 
@@ -88,10 +87,9 @@
         errorMsg = @"查询无结果";
     }
     [MBProgressHUD showMessage:errorMsg toView:self.view];
-    __weak typeof(self) ipVc = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:ipVc.view];
-        [ipVc.titleView.titleSearch becomeFirstResponder];
+        [MBProgressHUD hideHUDForView:self.view];
+        [self.titleView.titleSearch becomeFirstResponder];
     });
 }
 
