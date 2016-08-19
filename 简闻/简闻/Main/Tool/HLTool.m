@@ -331,12 +331,18 @@
 }
 
 + (void)clearCache {
-    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
-    path = [path stringByAppendingPathComponent:@"robot.rrr"];
+    NSString *pathRobot = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    NSString *path = [pathRobot stringByAppendingPathComponent:@"robot.rrr"];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:path]) {
         [fileManager removeItemAtPath:path error:nil];
     }
+    
+    path = [pathRobot stringByAppendingPathComponent:@"news.sqlite"];
+    if ([fileManager fileExistsAtPath:path]) {
+        [fileManager removeItemAtPath:path error:nil];
+    }
+    
     SDImageCache *cache = [SDImageCache sharedImageCache];
     [cache cleanDisk];
     [cache clearDisk];

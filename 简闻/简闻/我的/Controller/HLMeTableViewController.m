@@ -586,10 +586,6 @@
     }
 }
 
-//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-//    [self.view endEditing:YES];
-//}
-
 - (HLAccount *)account {
     if (!_account) {
         self.account = [HLAccount sharedAccount];
