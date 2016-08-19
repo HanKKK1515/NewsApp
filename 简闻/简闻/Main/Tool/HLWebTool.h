@@ -13,6 +13,5 @@
 + (void)get:(NSString *)url param:(NSDictionary *)param class:(Class)resultClass success:(void (^)(id responseObject))success failure:(void (^)(NSError *error))failure;
 + (void)getNewsWithKeyword:(NSString *)keyword success:(void (^)(NSMutableArray *allNews))success;
 + (void)insertNews:(HLNews *)news inArray:(NSMutableArray *)array;
-+ (void)saveCacheNews;
 + (void)getNewsFromCache:(BOOL)cache success:(void (^)(NSMutableArray *allNews))success;
 @end

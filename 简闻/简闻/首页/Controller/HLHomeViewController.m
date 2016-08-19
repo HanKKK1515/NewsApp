@@ -104,15 +104,8 @@ static const int minRow = 10;
     });
 }
 
-- (void)warningNoNet {
-    [MBProgressHUD showMessage:@"网络已断开，请检查网络设置！" toView:self.view];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:self.view];
-    });
-}
-
 /**
- *  自动终止刷新refresh
+ *  定时器自动终止刷新refresh
  */
 - (void)checkIsRefreshing {
     if (++self.refreshLoop <= 5) {
@@ -332,9 +325,7 @@ static const int minRow = 10;
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    if (self.titleView.titleSearch.isFirstResponder) {
         [self.titleView.titleSearch resignFirstResponder];
-    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -366,7 +357,7 @@ static const int minRow = 10;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             scrollView.scrollEnabled = YES;
             if (self.isAll) {
-                [HLWebTool getNewsFromCache:NO success:^(NSMutableArray *allNews) {
+                [HLWebTool getNewsFromCache:YES success:^(NSMutableArray *allNews) {
                     self.allNews = allNews;
                 }];
             } else {

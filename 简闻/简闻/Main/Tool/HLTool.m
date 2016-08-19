@@ -96,6 +96,7 @@
     if (array.count > 0) {
         for (int i = 0; i < array.count; i++) {
             HLMemo *tempMemo = array[i];
+            
             NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
             fmt.dateFormat = @"yyyy-MM-dd hh:mm:ss";
             NSComparisonResult result = [[fmt stringFromDate:memo.date] compare:[fmt stringFromDate:tempMemo.date]];
