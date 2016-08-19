@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HLNews : NSObject
+@interface HLNews : NSObject <NSCoding>
 @property (copy, nonatomic) NSString *title; // 新闻标题
 @property (copy, nonatomic) NSString *src; // 新闻来源
 @property (copy, nonatomic) NSString *url; // 新闻链接

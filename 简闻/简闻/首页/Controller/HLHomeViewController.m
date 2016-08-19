@@ -8,26 +8,20 @@
 
 #import "HLHomeViewController.h"
 #import "HLWebTool.h"
-#import "HLNewsResponse.h"
-#import "HLNewsHotResponse.h"
 #import "MBProgressHUD+MJ.h"
 #import "HLNewsTableViewCell.h"
 #import "HLNewsViewController.h"
 #import "HLNavView.h"
 #import "HLPostcodeFooterView.h"
-#import "Reachability+AutoChecker.h"
 #import "HLNewsHeaderView.h"
+#import "HLShowRefreshCountTool.h"
 
 @interface HLHomeViewController () <UITextFieldDelegate, HLNewsHeaderViewDelegate>
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *hot;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchBtn;
-@property (strong, nonatomic) NSArray *hotNewsTitle; // 每次请求的热点新闻标题
-@property (strong, nonatomic) NSMutableArray *hotNewsAllTitle; // 所有热点新闻标题
-@property (strong, nonatomic) NSMutableArray *newsFirstes; // 搜索新闻的所有第一个结果
 @property (strong, nonatomic) NSMutableArray *allNews; // 要显示的新闻数据
 @property (strong, nonatomic) HLNavView *titleView;
 @property (assign, nonatomic, getter = isAll) BOOL all;
-@property (assign, nonatomic) int newCount;
 @property (strong, nonatomic) HLPostcodeFooterView *footerView;
 @property (strong, nonatomic) NSTimer *timer;
 @property (assign, nonatomic) int refreshLoop;
@@ -46,7 +40,6 @@ static const int minRow = 10;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     UIApplication *app = [UIApplication sharedApplication];
     app.statusBarHidden = NO;
     app.statusBarStyle = UIStatusBarStyleLightContent;
@@ -59,18 +52,55 @@ static const int minRow = 10;
     
     [self setRefreshVc];
     
+    [self setupNotifiction];
     
     self.all = YES;
-    [self setupRefresh];
+    [HLWebTool getNewsFromCache:YES success:^(NSMutableArray *allNews) {
+        if (allNews.count) {
+            self.allNews = allNews;
+        } else {
+            [HLWebTool getNewsFromCache:NO success:^(NSMutableArray *allNews) {
+                self.allNews = allNews;
+            }];
+        }
+    }];
 }
 
-- (void)setupRefresh {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if ([Reachability isReachable]) {
-            [self refresh:nil];
-        } else {
-            [self performSelectorOnMainThread:@selector(warningNoNet) withObject:nil waitUntilDone:YES];
-        }
+#pragma mark - 通知，监听数据的加载过程和结果
+- (void)setupNotifiction {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopRefreshWithNewsCount:) name:@"stopRefreshWithNewsCount" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setupHeaderViewData) name:@"setupHeaderViewData" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadWithData) name:@"reloadData" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkError) name:@"networkError" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endHeaderRefreshing) name:@"endHeaderRefreshing" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noNews) name:@"noNews" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(titleBecomeFirstResponder) name:@"titleBecomeFirstResponder" object:nil];
+}
+
+- (void)stopRefreshWithNewsCount:(NSNotification *)notif {
+    int count = [notif.object intValue];
+    [self stopRefreshWithTopCount:count];
+}
+
+- (void)reloadWithData {
+    [self.tableView reloadData];
+}
+
+- (void)networkError {
+    [MBProgressHUD showError:@"网络连接错误！" toView:self.view];
+}
+
+- (void)endHeaderRefreshing {
+    [self.refreshControl endRefreshing];
+}
+
+- (void)noNews {
+    [MBProgressHUD showError:@"无相关新闻！" toView:self.view];
+}
+
+- (void)titleBecomeFirstResponder {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.titleView.titleSearch becomeFirstResponder];
     });
 }
 
@@ -95,6 +125,7 @@ static const int minRow = 10;
         self.refreshCount = 1;
     }
 }
+
 /**
  *  开启定时器
  */
@@ -102,6 +133,7 @@ static const int minRow = 10;
     [super viewDidAppear:animated];
     [self timer];
 }
+
 /**
  *  销毁定时器
  */
@@ -111,6 +143,11 @@ static const int minRow = 10;
         [self.timer invalidate];
         self.timer = nil;
     }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setMyFooterView {
@@ -137,45 +174,24 @@ static const int minRow = 10;
     [self.refreshControl addTarget:self action:@selector(downRefresh) forControlEvents:UIControlEventValueChanged];
 }
 
+/**
+ *  提醒新闻更新条数
+ */
 - (void)showCountLabel:(int)count {
-    UILabel *label = [[UILabel alloc] init];
-    label.alpha = 0.0;
-    label.translatesAutoresizingMaskIntoConstraints = NO;
+    NSString *text = nil;
     if (count) {
         if (self.isAll) {
-            label.text = [NSString stringWithFormat:@"更新%lu条新闻", (unsigned long)count];
+            text = [NSString stringWithFormat:@"更新%lu条新闻", (unsigned long)count];
         } else {
-            label.text = [NSString stringWithFormat:@"搜到%lu条相关新闻", (unsigned long)count];
+            text = [NSString stringWithFormat:@"搜到%lu条相关新闻", (unsigned long)count];
         }
     } else {
-        label.text = @"无更新数据";
+        text = @"无更新数据";
     }
-    label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [UIColor whiteColor];
-    label.font = [UIFont systemFontOfSize:10];
-    label.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"timeline_new_status_background"]];
-    [self.navigationController.view insertSubview:label belowSubview:self.navigationController.navigationBar];
-    
-    NSLayoutConstraint *bottom = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.navigationController.navigationBar attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
-    NSLayoutConstraint *centerX = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.navigationController.navigationBar attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
-    NSLayoutConstraint *width = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:[UIScreen mainScreen].bounds.size.width];
-    NSLayoutConstraint *height = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:20];
-    [self.navigationController.view addConstraints:@[bottom, centerX, width, height]];
-    [UIView animateWithDuration:1 animations:^{
-        label.alpha = 1.0;
-        label.transform = CGAffineTransformMakeTranslation(0, 20);
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:1 delay:1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            label.alpha = 0.0;
-            label.transform =CGAffineTransformMakeTranslation(0, 0);
-        } completion:^(BOOL finished) {
-            [label removeFromSuperview];
-        }];
-    }];
+    [HLShowRefreshCountTool showText:text inNavc:self.navigationController];
 }
 
 - (void)stopRefreshWithTopCount:(int)count {
-    
     [self showCountLabel:count];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (self.refreshControl.isRefreshing) {
@@ -209,157 +225,11 @@ static const int minRow = 10;
     }];
 }
 
-- (void)getNewsHot {
-    self.all = YES;
-    NSString *url = @"http://op.juhe.cn/onebox/news/words";
-    NSDictionary *attribute = @{@"key" : @"2acf8e073270584d037f5da1ba51fb24"};
-    [HLWebTool get:url param:attribute class:[HLNewsHotResponse class] success:^(id responseObject) {
-        HLNewsHotResponse *response = responseObject;
-        if ([response.reason isEqualToString:@"查询成功"] && self.isAll) {
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"!SELF in %@", self.hotNewsAllTitle];
-            self.hotNewsTitle = [response.result filteredArrayUsingPredicate:predicate];
-            if (self.hotNewsTitle.count) {
-                [self.hotNewsAllTitle addObjectsFromArray:self.hotNewsTitle];
-                [self setData];
-            } else {
-                self.allNews = self.newsFirstes;
-                [self stopRefreshWithTopCount:0];
-                [self setupHeaderViewData];
-                [self.tableView reloadData];
-            }
-        } else if (self.isAll) {
-            self.allNews = self.newsFirstes;
-            [self stopRefreshWithTopCount:0];
-            [self setupHeaderViewData];
-            [self.tableView reloadData];
-        } else {
-            [self.refreshControl endRefreshing];
-        }
-    } failure:^(NSError *error) {
-        if (self.isAll) {
-            self.allNews = self.newsFirstes;
-            [self stopRefreshWithTopCount:0];
-            [self setupHeaderViewData];
-            [self.tableView reloadData];
-            [MBProgressHUD showError:@"网络连接错误！" toView:self.view];
-        } else {
-            [self.refreshControl endRefreshing];
-        }
-    }];
-}
-
-- (void)setData {
-    self.newCount = 0;
-    int hotCount = (int)self.hotNewsTitle.count;
-    __block int responseCount = 0;
-    for (int i = 0; i < hotCount; i++) {
-        NSString *keyword = self.hotNewsTitle[i];
-        NSString *url = @"http://op.juhe.cn/onebox/news/query";
-        NSDictionary *attribute = @{@"q" : keyword, @"key" : @"2acf8e073270584d037f5da1ba51fb24"};
-        [HLWebTool get:url param:attribute class:[HLNewsResponse class] success:^(id responseObject) {
-            HLNewsResponse *response = responseObject;
-            if ([response.reason isEqualToString:@"查询成功"] && self.isAll) {
-                HLNews *news = response.result.firstObject;
-                [self insertNews:news inArray:self.newsFirstes];
-                self.newCount++;
-            }
-            responseCount++;
-            if (self.newCount == 1) {
-                self.allNews = self.newsFirstes;
-                [self setupHeaderViewData];
-                [self.tableView reloadData];
-            }
-            if (!(responseCount % 10) && self.isAll) {
-                self.allNews = self.newsFirstes;
-                [self setupHeaderViewData];
-                [self.tableView reloadData];
-            }
-            if (responseCount == hotCount) {
-                if (self.isAll) {
-                    self.allNews = self.newsFirstes;
-                    [self stopRefreshWithTopCount:self.newCount];
-                    [self setupHeaderViewData];
-                    [self.tableView reloadData];
-                } else {
-                    [self.refreshControl endRefreshing];
-                }
-            }
-        } failure:^(NSError *error) {
-            responseCount++;
-            if (responseCount == hotCount) {
-                if (self.isAll) {
-                    self.allNews = self.newsFirstes;
-                    [self stopRefreshWithTopCount:self.newCount];
-                    [self setupHeaderViewData];
-                    [self.tableView reloadData];
-                    [MBProgressHUD showError:@"网络连接不稳定,加载失败！" toView:self.view];
-                } else {
-                    [self.refreshControl endRefreshing];
-                }
-            }
-        }];
-    }
-}
-
-- (void)insertNews:(HLNews *)news inArray:(NSMutableArray *)array {
-    if (array.count > 0) {
-        for (int i = 0; i < array.count; i++) {
-            HLNews *tempNews = array[i];
-            NSComparisonResult result = [news.pdate_src compare:tempNews.pdate_src];
-            if ((result == NSOrderedDescending) || (result == NSOrderedSame)) {
-                [array insertObject:news atIndex:i];
-                return;
-            } else if (i == array.count - 1) {
-                [array addObject:news];
-                return;
-            }
-        }
-    } else {
-        [array addObject:news];
-    }
-}
-
-- (void)getNewsWithKeyword:(NSString *)keyword {
-    self.all = NO;
-    self.newCount = 0;
-    NSString *url = @"http://op.juhe.cn/onebox/news/query";
-    NSDictionary *attribute = @{@"q" : keyword, @"key" : @"2acf8e073270584d037f5da1ba51fb24"};
-    [HLWebTool get:url param:attribute class:[HLNewsResponse class] success:^(id responseObject) {
-        HLNewsResponse *response = responseObject;
-        if ([response.reason isEqualToString:@"查询成功"] && !self.isAll) {
-            self.allNews = response.result.mutableCopy;
-            self.newCount = (int)response.result.count;
-            [self setupHeaderViewData];
-            [self.tableView reloadData];
-        } else if (!self.isAll) {
-            [MBProgressHUD showError:@"无相关新闻！" toView:self.view];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.titleView.titleSearch becomeFirstResponder];
-            });
-        }
-        if (self.isAll) {
-            [self.refreshControl endRefreshing];
-        } else {
-            [self stopRefreshWithTopCount:self.newCount];
-        }
-    } failure:^(NSError *error) {
-        if (self.isAll) {
-            [self.refreshControl endRefreshing];
-        } else {
-            [self stopRefreshWithTopCount:0];
-            [MBProgressHUD showError:@"网络连接错误！" toView:self.view];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.titleView.titleSearch becomeFirstResponder];
-            });
-        }
-    }];
-}
-
 - (void)setupHeaderViewData {
     if (self.allNews.count < minRow || !self.isAll) return;
     
     for (HLNews *new in self.headerNews) {
-        [self insertNews:new inArray:self.allNews];
+        [HLWebTool insertNews:new inArray:self.allNews];
     }
     [self.headerNews removeAllObjects];
     
@@ -385,12 +255,16 @@ static const int minRow = 10;
 }
 
 - (IBAction)refresh:(UIBarButtonItem *)sender {
+    self.titleView.titleSearch.text = @"";
     [self.titleView.titleSearch resignFirstResponder];
     self.hot.enabled = NO;
     self.searchBtn.enabled = YES;
     [self startRefresh];
-    [self getNewsHot];
-    self.titleView.titleSearch.text = @"";
+    
+    self.all = YES;
+    [HLWebTool getNewsFromCache:NO success:^(NSMutableArray *allNews) {
+        self.allNews = allNews;
+    }];
 }
 
 - (IBAction)search:(UIBarButtonItem *)sender {
@@ -405,7 +279,10 @@ static const int minRow = 10;
     self.searchBtn.enabled = NO;
     self.hot.enabled = YES;
     [self startRefresh];
-    [self getNewsWithKeyword:self.titleView.titleSearch.text];
+    self.all = NO;
+    [HLWebTool getNewsWithKeyword:self.titleView.titleSearch.text success:^(NSMutableArray *allNews) {
+        self.allNews = allNews.mutableCopy;
+    }];
 }
 
 #pragma mark - UITableViewDataSource
@@ -489,9 +366,14 @@ static const int minRow = 10;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             scrollView.scrollEnabled = YES;
             if (self.isAll) {
-                [self getNewsHot];
+                [HLWebTool getNewsFromCache:NO success:^(NSMutableArray *allNews) {
+                    self.allNews = allNews;
+                }];
             } else {
-                [self getNewsWithKeyword:self.titleView.titleSearch.text];
+                self.all = NO;
+                [HLWebTool getNewsWithKeyword:self.titleView.titleSearch.text success:^(NSMutableArray *allNews) {
+                    self.allNews = allNews.mutableCopy;
+                }];
             }
         });
     }
@@ -514,10 +396,6 @@ static const int minRow = 10;
     vc.url = news.url;
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField {
-    [self.titleView.titleSearch resignFirstResponder];
-}
-
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self search:self.searchBtn];
     return YES;
@@ -529,20 +407,6 @@ static const int minRow = 10;
         self.allNews = [NSMutableArray array];
     }
     return _allNews;
-}
-
-- (NSMutableArray *)newsFirstes {
-    if (!_newsFirstes) {
-        self.newsFirstes = [NSMutableArray array];
-    }
-    return _newsFirstes;
-}
-
-- (NSMutableArray *)hotNewsAllTitle {
-    if (!_hotNewsAllTitle) {
-        self.hotNewsAllTitle = [NSMutableArray array];
-    }
-    return _hotNewsAllTitle;
 }
 
 - (HLPostcodeFooterView *)footerView {

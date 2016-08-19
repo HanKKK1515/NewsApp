@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "HLAccount.h"
 
+@class HLAccount;
 @interface HLTool : NSObject
 
 + (void)creatWithObject:(id)object;
@@ -21,4 +22,5 @@
 + (void)saveAccount:(HLAccount *)account;
 + (HLAccount *)getAccount;
 + (void)delegateAccount;
+
 @end
