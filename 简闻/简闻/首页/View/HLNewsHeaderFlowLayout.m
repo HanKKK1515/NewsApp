@@ -45,7 +45,6 @@
 }
 
 - (NSArray<UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect {
-    
     CGFloat changeSizeRect = self.collectionView.frame.size.width * 0.5; // 图片开始放大时的center距离collectionView中心x的距离
     
     CGRect currentFrame; // 可视区域的frame

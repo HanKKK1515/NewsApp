@@ -15,7 +15,7 @@
 @property (strong, nonatomic) UICollectionView *collectionView;
 @end
 
-static const CGFloat height = 150;
+static const CGFloat height = 230;
 @implementation HLNewsHeaderView
 
 + (instancetype)headerView {
@@ -26,31 +26,36 @@ static const CGFloat height = 150;
 {
     self = [super initWithCoder:coder];
     if (self) {
-        CGRect collFrame = self.frame;
-        collFrame.size.width = [UIScreen mainScreen].bounds.size.width;
-        collFrame.size.height = height;
-        self.frame = collFrame;
-        [self setupCollection];
+        HLNewsHeaderFlowLayout *flowLayout = [[HLNewsHeaderFlowLayout alloc] init];
+        flowLayout.delegate = self;
+        UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.frame collectionViewLayout:flowLayout];
+        collectionView.delegate = self;
+        collectionView.dataSource = self;
+        collectionView.showsHorizontalScrollIndicator = NO;
+        collectionView.showsVerticalScrollIndicator = NO;
+        self.collectionView = collectionView;
+        [self insertSubview:collectionView atIndex:0];
+        
+        [self.collectionView registerNib:[UINib nibWithNibName:@"HLNewsHeaderCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"headerCell"];
     }
     return self;
 }
 
-- (void)setupCollection {
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
     CGRect collFrame = self.frame;
+    collFrame.size.width = [UIScreen mainScreen].bounds.size.width;
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+        collFrame.size.height = height;
+    } else {
+        collFrame.size.height = height - 80;
+    }
+    self.frame = collFrame;
+    
     collFrame.origin = CGPointMake(self.frame.origin.x, self.frame.origin.y + 7);
     collFrame.size = CGSizeMake(self.frame.size.width, self.frame.size.height - 7);
-    
-    HLNewsHeaderFlowLayout *flowLayout = [[HLNewsHeaderFlowLayout alloc] init];
-    flowLayout.delegate = self;
-    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:collFrame collectionViewLayout:flowLayout];
-    collectionView.delegate = self;
-    collectionView.dataSource = self;
-    collectionView.showsHorizontalScrollIndicator = NO;
-    collectionView.showsVerticalScrollIndicator = NO;
-    self.collectionView = collectionView;
-    [self insertSubview:collectionView atIndex:0];
-    
-    [self.collectionView registerNib:[UINib nibWithNibName:@"HLNewsHeaderCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"headerCell"];
+    self.collectionView.frame = collFrame;
 }
 
 - (void)headerFlowLayout:(HLNewsHeaderFlowLayout *)headerFowLayout currentItem:(NSUInteger)item {
