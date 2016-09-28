@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HLLoginTextField.h"
 #import "HLButton.h"
 
 typedef NS_ENUM(NSUInteger, HLEmailOption) {

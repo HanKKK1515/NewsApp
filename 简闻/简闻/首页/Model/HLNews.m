@@ -7,7 +7,6 @@
 //
 
 #import "HLNews.h"
-#import "SDWebImageManager.h"
 
 @implementation HLNews
 

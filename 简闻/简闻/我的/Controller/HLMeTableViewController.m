@@ -9,7 +9,6 @@
 #import "HLMeTableViewController.h"
 #import <ShareSDK/ShareSDK.h>
 #import <ShareSDKConnector/ShareSDKConnector.h>
-#import "HLButton.h"
 #import "UIImageView+WebCache.h"
 #import "NSDate+HL.h"
 #import "HLTool.h"
@@ -19,8 +18,13 @@
 #import "HLGenderView.h"
 #import "HLBirthdayView.h"
 #import "HLMemo.h"
-#import "HLLoginTextField.h"
 #import "NSString+md5.h"
+
+
+#import <TencentOpenAPI/TencentOAuth.h>
+#import <TencentOpenAPI/QQApiInterface.h>
+#import "WeiboSDK.h"
+
 
 @interface HLMeTableViewController ()
 @property (strong, nonatomic) HLAccount *account;
@@ -96,29 +100,6 @@
                 [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
             }
         }];
-        
-        
-//        BmobUser *bUser = [BmobUser getCurrentUser];
-//        [bUser updateInBackgroundWithResultBlock:^(BOOL isSuccessful, NSError *error) {
-//            BmobUser *user = [BmobUser getCurrentUser];
-//            NSString *email = @"";
-//            if (isSuccessful) {
-//                if (user.email.length > 0) {
-//                    if ([[user objectForKey:@"emailVerified"] boolValue]) {
-//                        self.account.emailStatus = kHLEmailStatusTypeVerified;
-//                        email = self.account.email;
-//                    } else {
-//                        self.account.emailStatus = kHLEmailStatusTypeNoVerify;
-//                        email = [NSString stringWithFormat:@"%@(未验证)", self.account.email];
-//                    }
-//                } else {
-//                    self.account.emailStatus = kHLEmailStatusTypeNoBinding;
-//                    email = @"绑定邮箱";
-//                }
-//                cell.detailTextLabel.text = email;
-//                [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
-//            }
-//        }];
     }
 }
 
@@ -139,7 +120,7 @@
     self.account.platformType = [[user objectForKey:@"platformType"] unsignedLongValue];
     
     BmobQuery *bquery = [BmobQuery queryWithClassName:@"notes"];
-    [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser getCurrentUser]];
+    [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser currentUser]];
     [bquery findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
         NSMutableArray *memos = [NSMutableArray array];
         [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -483,7 +464,7 @@
 }
 
 - (void)updateUserInfoText:(NSString *)text row:(int)row {
-    BmobUser *user = [BmobUser getCurrentUser];
+    BmobUser *user = [BmobUser currentUser];
     if (row == 1) {
         user.username = text;
     } else if (row == 3) {

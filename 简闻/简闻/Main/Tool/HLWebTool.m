@@ -106,6 +106,7 @@ static int _page;
 
 + (void)setData:(void (^)(NSMutableArray *allNews))success {
     _newCount = 0;
+    NSUInteger allOldNewsCount = _newsFirstes.count;
     int hotCount = (int)_hotNewsTitle.count;
     __block int responseCount = 0;
     for (int i = 0; i < hotCount; i++) {
@@ -134,7 +135,7 @@ static int _page;
             if (responseCount == hotCount) {
                 if (_all) {
                     success(_newsFirstes);
-                    HLStopRefreshWithCountNotif(@(_newCount));
+                    HLStopRefreshWithCountNotif(@(_newsFirstes.count - allOldNewsCount));
                 } else {
                     HLEndHeaderRefreshingNotif;
                 }
@@ -146,7 +147,7 @@ static int _page;
             if (responseCount == hotCount) {
                 if (_all) {
                     success(_newsFirstes);
-                    HLStopRefreshWithCountNotif(@(_newCount));
+                    HLStopRefreshWithCountNotif(@(_newsFirstes.count - allOldNewsCount));
                     HLNetworkErrorNotif;
                 } else {
                     HLEndHeaderRefreshingNotif;

@@ -15,7 +15,7 @@
 @implementation HLTool
 
 + (void)saveAccount:(HLAccount *)account {
-    BmobUser *bUser = [BmobUser getCurrentUser];
+    BmobUser *bUser = [BmobUser currentUser];
     if (bUser) {
         bUser.username = account.nickname;
         bUser.email = account.email;
@@ -68,7 +68,7 @@
                 account.platformType = [[user objectForKey:@"platformType"] unsignedLongValue];
                 
                 BmobQuery *bquery = [BmobQuery queryWithClassName:@"notes"];
-                [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser getCurrentUser]];
+                [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser currentUser]];
                 [bquery findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
                     NSMutableArray *memos = [NSMutableArray array];
                     [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -130,7 +130,7 @@
         memo.title = [self newTitle:memo.title withArray:array];
         [array insertObject:memo atIndex:0];
         account.notes = array;
-        BmobUser *bUser = [BmobUser getCurrentUser];
+        BmobUser *bUser = [BmobUser currentUser];
         BmobObject *note = [BmobObject objectWithClassName:@"notes"];
         [note setObject:memo.title forKey:@"title"];
         [note setObject:memo.text forKey:@"text"];
@@ -168,7 +168,7 @@
 + (void)modifyNoteWithNewObj:(HLMemo *)newObj oldDate:(NSDate *)oldDate account:(HLAccount *)account {
     
     BmobQuery *bquery = [BmobQuery queryWithClassName:@"notes"];
-    [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser getCurrentUser]];
+    [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser currentUser]];
     [bquery findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
         [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             BmobObject *noteO = obj;
@@ -176,7 +176,7 @@
             fmt.dateFormat = @"yyyy-MM-dd hh:mm:ss";
             NSDate *date = [noteO objectForKey:@"date"];
             if ([[fmt stringFromDate:date] isEqualToString:[fmt stringFromDate:oldDate]]) {
-                BmobUser *bUser = [BmobUser getCurrentUser];
+                BmobUser *bUser = [BmobUser currentUser];
                 BmobObject *noteN = [BmobObject objectWithClassName:@"notes"];
                 [noteN setObject:newObj.title forKey:@"title"];
                 [noteN setObject:newObj.text forKey:@"text"];
@@ -275,7 +275,7 @@
         account.notes = listMemo;
         
         BmobQuery *bquery = [BmobQuery queryWithClassName:@"notes"];
-        [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser getCurrentUser]];
+        [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser currentUser]];
         [bquery findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
             [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 BmobObject *noteO = obj;
@@ -283,7 +283,7 @@
                 fmt.dateFormat = @"yyyy-MM-dd hh:mm:ss";
                 NSDate *date = [noteO objectForKey:@"date"];
                 if ([[fmt stringFromDate:date] isEqualToString:[fmt stringFromDate:oldDate]]) {
-                    [self removeNote:noteO user:[BmobUser getCurrentUser] account:account];
+                    [self removeNote:noteO user:[BmobUser currentUser] account:account];
                     *stop = YES;
                 }
             }];

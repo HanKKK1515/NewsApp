@@ -17,7 +17,7 @@
 
 @implementation HLFindCollectionCell
 
-+ (instancetype)findCellWithCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath; {
++ (instancetype)findCellWithCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath {
     static NSString *itemId = @"findItem";
     return [collectionView dequeueReusableCellWithReuseIdentifier:itemId forIndexPath:indexPath];
 }

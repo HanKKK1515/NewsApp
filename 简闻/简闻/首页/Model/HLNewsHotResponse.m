@@ -7,7 +7,6 @@
 //
 
 #import "HLNewsHotResponse.h"
-#import "MJExtension.h"
 
 @implementation HLNewsHotResponse
 @end

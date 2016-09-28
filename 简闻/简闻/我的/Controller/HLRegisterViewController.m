@@ -9,7 +9,6 @@
 #import "HLRegisterViewController.h"
 #import "MBProgressHUD+MJ.h"
 #import "HLLoginTextField.h"
-#import "HLButton.h"
 #import "HLTool.h"
 #import <BmobSDK/Bmob.h>
 #import "HLForgetPwdViewController.h"
@@ -144,7 +143,7 @@
     self.account.platformType = [[user objectForKey:@"platformType"] unsignedLongValue];
     
     BmobQuery *bquery = [BmobQuery queryWithClassName:@"notes"];
-    [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser getCurrentUser]];
+    [bquery whereObjectKey:@"myNotes" relatedTo:[BmobUser currentUser]];
     [bquery findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
         NSMutableArray *memos = [NSMutableArray array];
         [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

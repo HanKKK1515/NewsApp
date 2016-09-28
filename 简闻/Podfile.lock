@@ -1,0 +1,57 @@
+PODS:
+  - AFNetworking (3.1.0):
+    - AFNetworking/NSURLSession (= 3.1.0)
+    - AFNetworking/Reachability (= 3.1.0)
+    - AFNetworking/Security (= 3.1.0)
+    - AFNetworking/Serialization (= 3.1.0)
+    - AFNetworking/UIKit (= 3.1.0)
+  - AFNetworking/NSURLSession (3.1.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.1.0)
+  - AFNetworking/Security (3.1.0)
+  - AFNetworking/Serialization (3.1.0)
+  - AFNetworking/UIKit (3.1.0):
+    - AFNetworking/NSURLSession
+  - BmobSDK (1.7.2)
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+  - MBProgressHUD (1.0.0)
+  - MJExtension (3.0.13)
+  - MOBFoundation (2.0.11)
+  - SDWebImage (3.8.2):
+    - SDWebImage/Core (= 3.8.2)
+  - SDWebImage/Core (3.8.2)
+  - ShareSDK3 (3.4.2):
+    - ShareSDK3/ShareSDK (= 3.4.2)
+  - ShareSDK3/ShareSDK (3.4.2)
+  - ShareSDK3/ShareSDKPlatforms/QQ (3.4.2)
+  - ShareSDK3/ShareSDKPlatforms/SinaWeibo (3.4.2)
+
+DEPENDENCIES:
+  - AFNetworking
+  - BmobSDK
+  - FMDB (~> 2.6.2)
+  - MBProgressHUD
+  - MJExtension (~> 3.0.13)
+  - MOBFoundation
+  - SDWebImage (~> 3.8.2)
+  - ShareSDK3
+  - ShareSDK3/ShareSDKPlatforms/QQ
+  - ShareSDK3/ShareSDKPlatforms/SinaWeibo
+
+SPEC CHECKSUMS:
+  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  BmobSDK: e188cb31d6a8417ab668aee821da227d7512b865
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
+  MJExtension: 5932755f451458eefa24239358817f8d291240c7
+  MOBFoundation: e213065e65eebd8146ab29d10a8445dc8f385091
+  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
+  ShareSDK3: 2fa975dd22937fc7de3f6b5d0c41a18ba0dd1661
+
+PODFILE CHECKSUM: 9db04ada950f747c325101b2f29d39f7970a5cbb
+
+COCOAPODS: 1.1.0.beta.1

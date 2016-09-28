@@ -8,6 +8,7 @@
 
 #import "HLForgetPwdViewController.h"
 #import "MBProgressHUD+MJ.h"
+#import "HLLoginTextField.h"
 #import <BmobSDK/Bmob.h>
 #import "HLAccount.h"
 
@@ -106,7 +107,7 @@
                 }
             }];
         } else if (self.emailOption == kHLEmailOptionVerify || self.emailOption == kHLEmailOptionReset ||self.emailOption == kHLEmailOptionSet) {
-            __block BmobUser *user = [BmobUser getCurrentUser];
+            __block BmobUser *user = [BmobUser currentUser];
             user.email = self.email.text;
             [user updateInBackgroundWithResultBlock:^(BOOL isSuccessful, NSError *error) {
                 if (isSuccessful) {
